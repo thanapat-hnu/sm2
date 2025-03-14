@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Loop and While Loop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+
+    </style>
+</head>
+<body>
+    <h3>ตัวอย่าง For Loop และ While Loop</h3>
+    
+    <button onclick="showNumbers()">แสดงเลข 1-10 (For Loop)</button>
+    <p id="forLoopResult"></p>
+
+    <button onclick="startWhileLoop()">รับค่าจากผู้ใช้ (While Loop)</button>
+    <p id="whileLoopResult"></p>
+
+    <script>
+        // For Loop: แสดงเลข 1-10
+        function showNumbers() {
+            let result = "";
+            for (let i = 1; i <= 10; i++) {
+                result += i + " ";
+            }
+            document.getElementById("forLoopResult").innerHTML = result;
+        }
+
+        // While Loop: รับค่าจากผู้ใช้จนกว่าพิมพ์ 'exit'
+         // While Loop: รับค่าจากผู้ใช้จนกว่าพิมพ์ 'exit'
+         function startWhileLoop() {
+        let input;
+        let result = "";
+        while (true) {
+            input = prompt("กรุณาใส่ข้อความ (พิมพ์ 'exit' เพื่อหยุด):");
+            
+            // แยกเงื่อนไขการตรวจสอบ
+            if (input === null) {
+                break;
+            }
+
+            if (input.toLowerCase() === "exit") {
+                result += "คุณพิมพ์ 'exit' และออกจากการรับค่าแล้ว.<br>";
+                break;
+            }
+
+            result += input + "<br>";
+        }
+        document.getElementById("whileLoopResult").innerHTML = result;
+    }
+    </script>
+</body>
+</html>

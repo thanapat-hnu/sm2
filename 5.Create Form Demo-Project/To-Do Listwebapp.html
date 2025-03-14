@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 70%;
+            padding: 8px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #ddd;
+            margin: 5px 0;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+            width: 100%;
+        }
+        .delete-btn {
+            background-color: red;
+            padding: 5px;
+            margin-left: 10px;
+        }
+        .status-btn {
+            padding: 5px 10px;
+            background-color: #ffc107;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .status-btn.done {
+            background-color: #005519;
+            color: white;
+        }
+        .task-text {
+            flex-grow: 1;
+            text-align: left;
+            padding-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List ✅</h1>
+        <input type="text" id="taskInput" placeholder="เพิ่มงานที่ต้องทำ...">
+        <button onclick="addTask()">เพิ่ม</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", loadTasks);
+
+        function addTask() {
+            let taskInput = document.getElementById("taskInput");
+            let taskText = taskInput.value.trim();
+
+            if (taskText === "") {
+                alert("กรุณากรอกชื่อรายการ!");
+                return;
+            }
+
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            let task = { text: taskText, status: "Waiting" };
+            tasks.push(task);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+            renderTask(task);
+            taskInput.value = "";
+        }
+
+        function renderTask(task) {
+            let taskList = document.getElementById("taskList");
+            let li = document.createElement("li");
+            li.innerHTML = `
+                <span class="task-text">${task.text}</span>
+                <button class="status-btn" onclick="toggleStatus(this)">${task.status}</button>
+                <button class="delete-btn" onclick="removeTask(this)">ลบ</button>
+            `;
+            taskList.appendChild(li);
+        }
+
+        function toggleStatus(button) {
+            let taskItem = button.parentElement;
+            let taskText = taskItem.querySelector(".task-text").textContent.trim();
+
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            let task = tasks.find(task => task.text === taskText);
+            
+            // เปลี่ยนสถานะจาก "Waiting" เป็น "Done" หรือกลับกัน
+            task.status = task.status === "Waiting" ? "Done" : "Waiting";
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+            button.textContent = task.status;
+            if (task.status === "Done") {
+                button.classList.add("done");
+            } else {
+                button.classList.remove("done");
+            }
+        }
+
+        function removeTask(button) {
+            let taskItem = button.parentElement;
+            let taskText = taskItem.querySelector(".task-text").textContent.trim();  
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks = tasks.filter(task => task.text !== taskText);  // ลบงานที่เลือกออกจาก tasks
+            localStorage.setItem("tasks", JSON.stringify(tasks));  // อัปเดต localStorage
+
+            taskItem.remove();  // ลบรายการจาก HTML
+        }
+
+        function loadTasks() {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks.forEach(task => renderTask(task));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Validation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 50px;
+      }
+      form {
+        display: inline-block;
+        text-align: left;
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input {
+        display: block;
+        width: 100%;
+        padding: 8px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        width: 100%;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Register Form</h2>
+    <form id="userForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" placeholder="Enter your name" required />
+
+      <label for="email">Email:</label>
+      <input type="text" id="email" placeholder="Enter your email" required />
+
+      <p id="errorMessage" class="error"></p>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <script>
+      document.getElementById("userForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // ป้องกันการรีเฟรชหน้า
+
+        let name = document.getElementById("name").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let errorMessage = document.getElementById("errorMessage");
+
+        // ตรวจสอบว่าชื่อว่างหรือไม่
+        if (name === "") {
+          errorMessage.innerText = "⚠ กรุณากรอกชื่อ";
+          return;
+        }
+
+        // ตรวจสอบว่าอีเมลมี "@" และ ".com" หรือไม่
+        if (!email.includes("@") || !email.endsWith(".com")) {
+          errorMessage.innerText = "⚠ กรุณากรอกอีเมลที่ถูกต้อง (ต้องมี @ และ .com)";
+          return;
+        }
+
+        errorMessage.innerText = ""; // ล้างข้อความผิดพลาด
+
+        alert("✅ ลงทะเบียนสำเร็จ!"); // แสดงข้อความแจ้งเตือน
+        document.getElementById("userForm").reset(); // เคลียร์ค่าฟอร์ม
+      });
+    </script>
+  </body>
+</html>

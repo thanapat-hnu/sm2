@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursive Algorithm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+
+    </style>
+</head>
+<body>
+    <h3>โปรแกรมคำนวณ Factorial และ Fibonacci Sequence</h3>
+
+    <h4>Factorial (แฟกทอเรียล)</h4>
+    <label for="factorialInput">กรุณากรอกเลข:</label>
+    <input type="number" id="factorialInput">
+    <button onclick="calculateFactorial()">คำนวณ Factorial</button>
+    <p id="factorialResult"></p>
+
+    <h4>Fibonacci Sequence (ลำดับฟีโบนาชี)</h4>
+    <label for="fibonacciInput">กรุณากรอกเลข:</label>
+    <input type="number" id="fibonacciInput">
+    <button onclick="calculateFibonacci()">คำนวณ Fibonacci</button>
+    <p id="fibonacciResult"></p>
+
+    <script>
+        // ฟังก์ชันคำนวณ Factorial แบบ Recursive
+        function factorial(n) {
+            if (n === 0 || n === 1) {
+                return 1;  // กรณีฐาน (Base case)
+            } else {
+                return n * factorial(n - 1);  // Recursive case
+            }
+        }
+
+        // ฟังก์ชันคำนวณ Fibonacci แบบ Recursive
+        function fibonacci(n) {
+            if (n === 0) {
+                return 0;  // กรณีฐาน (Base case)
+            } else if (n === 1) {
+                return 1;
+            } else {
+                return fibonacci(n - 1) + fibonacci(n - 2);  // Recursive case
+            }
+        }
+
+        // ฟังก์ชันคำนวณ Factorial เมื่อคลิกปุ่ม
+        function calculateFactorial() {
+            const num = parseInt(document.getElementById("factorialInput").value);
+            const result = factorial(num);  // เรียกฟังก์ชัน factorial
+            document.getElementById("factorialResult").innerHTML = `Factorial ของ ${num} คือ ${result}`;
+        }
+
+        // ฟังก์ชันคำนวณ Fibonacci เมื่อคลิกปุ่ม
+        function calculateFibonacci() {
+            const num = parseInt(document.getElementById("fibonacciInput").value);
+            const result = fibonacci(num);  // เรียกฟังก์ชัน fibonacci
+            document.getElementById("fibonacciResult").innerHTML = `Fibonacci ของ ${num} คือ ${result}`;
+        }
+    </script>
+</body>
+</html>

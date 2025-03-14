@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottery Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            font-size: 20px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lottery Generator</h1>
+
+        <button onclick="generateLottery()">🎰 สุ่มเลขหวย</button>
+        <p id="lotteryNumber">เลขที่ออก : ???</p>
+
+        <h3>ลองทายเลข 6 หลัก</h3>
+        <input type="text" id="userGuess" placeholder="ใส่เลข 6 หลัก" maxlength="6">
+        <button onclick="checkLottery()">✅ ตรวจสอบเลขทาย</button>
+
+        <p id="result"></p>
+    </div>
+
+    <script>
+        let lotteryNumber = ""; // เก็บเลขที่ออก
+
+        function generateLottery() {
+            lotteryNumber = Math.floor(100000 + Math.random() * 900000).toString();
+            document.getElementById("lotteryNumber").innerText = "เริ่มทายเลขได้เลยยยยยยย"; // ซ่อนเลขที่ออก
+            document.getElementById("result").innerText = ""; // ล้างผลลัพธ์เก่า
+            console.log(lotteryNumber);
+        }
+
+        function checkLottery() {
+            let userGuess = document.getElementById("userGuess").value;
+
+            if (userGuess.length !== 6 || isNaN(userGuess)) {
+                alert("กรุณากรอกเลข 6 หลัก!");
+                return;
+            }
+
+            if (lotteryNumber === "") {
+                alert("กรุณากดสุ่มเลขหวยก่อน!");
+                return;
+            }
+
+            if (userGuess === lotteryNumber) {
+                document.getElementById("result").innerText = "🎉 ยินดีด้วย! คุณถูกหวย  🎉";
+                document.getElementById("result").style.color = "green";
+                document.getElementById("lotteryNumber").innerText = "เลขที่ออก : " + lotteryNumber; // เผยเลขที่ออก
+            } else {
+                document.getElementById("result").innerText = "❌ ไม่ถูกหวย! ลองใหม่อีกครั้ง";
+                document.getElementById("result").style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Variable and Data Type</title>
+  </head>
+  <body>
+    <h2>Check Console for Output</h2>
+
+    <script>
+
+      // พื้นฐานของตัวแปรและชนิดข้อมูล
+
+      console.log(
+        "สร้างตัวแปรเก็บ String, Integer, Boolean และแสดงผลผ่าน Console"
+      );
+      // สร้างตัวแปรเก็บ String, Integer, Boolean
+      let text = "Hello World!"; // String
+      let number = 10; // Integer 
+      let flag = true; // Boolean
+
+      // แสดงผลใน Console
+      console.log("String:", text);
+      console.log("Integer:", number);
+      console.log("Boolean:", flag);
+
+      console.log("ทดสอบการแปลงชนิดข้อมูล เช่น int(10), float(3.14), str(100)");
+      // ทดสอบการแปลงชนิดข้อมูล
+      let convertedInt = parseInt("10"); 
+      let convertedFloat = parseFloat("3.14"); 
+      let convertedStr = String(100); 
+
+      
+      console.log("Converted int:", convertedInt);
+      console.log("Converted float:", convertedFloat);
+      console.log("Converted str:", convertedStr);
+
+      console.log("---------------------------------------------");
+
+
+
+
+
+
+      //  List / Array → เพิ่ม, ลบ, แก้ไขข้อมูลในลิสต์
+      let numbers = [10, 20, 30]; 
+      numbers.push(40); 
+      numbers.splice(1, 1); 
+      numbers[0] = 100; 
+      console.log("Updated Array:", numbers); 
+
+      //  Dictionary / Object → เก็บข้อมูลนักเรียน
+      let student = {
+        name: "Tom",
+        age: 20,
+        grade: "A",
+      };
+      console.log("Student Info:", student); 
+      
+
+      console.log("---------------------------------------------");
+
+
+      // สร้าง Tuple (Array) ที่มีหลายประเภทข้อมูล
+      let myTuple = [1, "apple", true, 2, "banana", "apple", 3, "cherry", true];
+
+      // แสดงผล Tuple
+      console.log("Original Tuple:", myTuple);
+
+      // ใช้ Set เพื่อกำจัดค่าที่ซ้ำกัน
+      let mySet = new Set(myTuple);
+
+      // แปลง Set กลับเป็น Array เพื่อให้สามารถใช้งานได้
+      let uniqueArray = [...mySet];
+
+      // แสดงผลลัพธ์ที่ไม่มีค่าซ้ำ
+      console.log("Array with unique values:", uniqueArray);
+
+
+
+
+
+
+      console.log("---------------------------------------------");
+
+
+
+
+
+      //  การจัดการ JSON Data (การอ่านและเขียนไฟล์ JSON)
+
+      // JSON String (ตัวอย่างข้อมูลที่เราจะใช้)
+      let jsonData = '{"name": "Tom", "age": 20, "grade": "A"}';
+
+      // อ่านข้อมูลจาก JSON String 
+      let parsedData = JSON.parse(jsonData);
+      console.log("Parsed JSON:", parsedData);
+
+      // แปลงข้อมูลเป็น JSON String 
+      let jsonString = JSON.stringify(parsedData, null, 4); 
+      console.log("JSON String:", jsonString);
+
+      // สร้าง Object ใหม่และแปลงเป็น JSON
+      let newStudent = {
+        name: "John",
+        age: 25,
+        grade: "B",
+      };
+      let newJsonString = JSON.stringify(newStudent, null, 4); // แปลงเป็น JSON String
+      console.log("New JSON String:", newJsonString);
+
+      console.log("---------------------------------------------");
+
+
+
+      
+    </script>
+  </body>
+</html>

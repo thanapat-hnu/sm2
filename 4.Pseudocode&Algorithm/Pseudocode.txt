@@ -1,0 +1,18 @@
+BEGIN
+    PRINT "Enter the radius of the circle: "
+    READ radius
+    SET pi TO 3.14159
+    SET area TO pi * radius * radius
+    PRINT "The area of the circle is: ", area
+END
+
+
+
+
+เริ่มต้น
+    แสดง "กรอกค่ารัศมีของวงกลม: "
+    อ่าน รัศมี
+    กำหนด ค่า_pi เป็น 3.14159
+    คำนวณ พื้นที่ เป็น ค่า_pi * รัศมี * รัศมี
+    แสดง "พื้นที่ของวงกลมคือ: ", พื้นที่
+จบ

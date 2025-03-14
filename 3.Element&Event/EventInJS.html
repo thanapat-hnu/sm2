@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Handling Example</title>
+    <style>
+      /* กำหนดสไตล์ของปุ่มและข้อความ */
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+      }
+
+      p {
+        font-size: 18px;
+        color: #333;
+      }
+
+      #message {
+        font-size: 20px;
+        margin-top: 20px;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        font-size: 16px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>JavaScript Event Handling</h1>
+
+    <!-- ปุ่มที่เมื่อคลิกจะเปลี่ยนข้อความ -->
+    <button id="clickButton">onclick Button</button>
+    
+    <button id="addEventListenerButton">addEventListener Button</button>
+    
+    
+
+    <button id="mouseoverButton">onmouseover</button>
+
+ 
+    <input type="text" id="inputBox" placeholder="onkeyup" />
+
+    <!-- ข้อความที่แสดงเมื่อผู้ใช้คลิกปุ่ม -->
+    <div id="message"></div>
+
+
+
+
+
+
+    <script>
+      // 1️⃣ ใช้ onclick เพื่อแสดงข้อความเมื่อคลิกปุ่ม
+      document.getElementById("clickButton").onclick = function () {
+        document.getElementById("message").innerText = "You clicked the button!";
+      };
+
+      // 2️⃣ ใช้ onmouseover เพื่อแสดงข้อความเมื่อเลื่อนเมาส์มาบนปุ่ม
+      document.getElementById("mouseoverButton").onmouseover = function () {
+        document.getElementById("message").innerText = "Mouse is over the button!";
+      };
+
+      // 3️⃣ ใช้ onkeyup เพื่อแสดงข้อความเมื่อผู้ใช้พิมพ์ในกล่องข้อความและกด Enter
+      document.getElementById("inputBox").onkeyup = function (event) {
+        if (event.key === "Enter") {
+          document.getElementById("message").innerText = "You pressed Enter!";
+        }
+      };
+
+      // 4️⃣ ใช้ addEventListener() เพื่อแสดงข้อความเมื่อคลิกปุ่ม (อีกวิธีหนึ่ง)
+      document.getElementById("addEventListenerButton").addEventListener("click", function () {
+        alert("You clicked the button again!");
+      });
+    </script>
+  </body>
+</html>
