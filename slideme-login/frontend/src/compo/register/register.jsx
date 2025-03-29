@@ -11,6 +11,9 @@ const Register = () => {
     password: '',
     confirmPassword: '',
     phoneNumber: '',
+    firstname: '',
+    lastname: '',
+    gender: '',
     acceptTerms: false
   });
 
@@ -24,12 +27,13 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Enhanced validation
+    // Validation
     if (!formData.username || !formData.email || !formData.password || 
-        !formData.confirmPassword || !formData.phoneNumber) {
+        !formData.confirmPassword || !formData.phoneNumber ||
+        !formData.firstname || !formData.lastname || !formData.gender) {
       setError('All fields are required');
       return;
     }
@@ -44,18 +48,34 @@ const Register = () => {
       return;
     }
 
-    // Here you would typically make an API call to register the user
-    console.log('Registration data:', formData);
-    // Reset form
-    setFormData({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      phoneNumber: '',
-      acceptTerms: false
-    });
-    setError('');
+    try {
+      const response = await fetch('http://localhost:3000/drivers/register', {  // เปลี่ยนจาก 5000 เป็น 3000
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+          email: formData.email,
+          firstname: formData.firstname,
+          lastname: formData.lastname,
+          phone: formData.phoneNumber,
+          gender: formData.gender
+        })
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Registration successful
+        navigate('/login'); // หรือไปยังหน้าที่ต้องการ
+      } else {
+        setError(data.message);
+      }
+    } catch (error) {
+      setError('Failed to register. Please try again.');
+    }
   };
 
   return (
@@ -124,6 +144,42 @@ const Register = () => {
               onChange={handleChange}
               className="input-field-RGT"
             />
+          </div>
+
+          <div className="form-group-RGT">
+            <input
+              type="text"
+              name="firstname"
+              placeholder="First Name"
+              value={formData.firstname}
+              onChange={handleChange}
+              className="input-field-RGT"
+            />
+          </div>
+
+          <div className="form-group-RGT">
+            <input
+              type="text"
+              name="lastname"
+              placeholder="Last Name"
+              value={formData.lastname}
+              onChange={handleChange}
+              className="input-field-RGT"
+            />
+          </div>
+
+          <div className="form-group-RGT">
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="input-field-RGT"
+            >
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
           </div>
 
           <div className="terms-group-RGT">
