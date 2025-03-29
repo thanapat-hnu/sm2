@@ -1,0 +1,151 @@
+.login-container-LOG {
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100vw;
+    background-color: #5aaa75;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: max(16px, 4vmin);
+    padding-top: 20vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Logo styles */
+.logo-container-LOG {
+    width: min(100px, 25vmin);
+    height: min(100px, 25vmin);
+    background-color: white;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.logo-text-LOG {
+    font-size: min(20px, 5vmin);
+    color: #5aaa75;
+    font-weight: 600;
+}
+
+.login-card-LOG {
+    width: min(300px, 80%);
+    background-color: white;
+    border-radius: 16px;
+    padding: min(32px, 6vmin);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.login-title-LOG {
+    color: #5aaa75;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.login-subtitle-LOG {
+    color: #666;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+.login-form-LOG {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group-LOG {
+    width: 100%;
+}
+
+.input-field-LOG {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+}
+
+.input-field-LOG:focus {
+    outline: none;
+    border-color: #5aaa75;
+}
+
+.error-message-LOG {
+    color: #dc3545;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.login-button-LOG {
+    width: 100%;
+    padding: 12px;
+    background-color: #5aaa75;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.login-button-LOG:hover {
+    background-color: #4a8f63;
+}
+
+.back-button-LOG {
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    color: #5aaa75;
+    border: 2px solid #5aaa75;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.back-button-LOG:hover {
+    background-color: rgba(90, 170, 117, 0.1);
+}
+
+@media screen and (max-height: 600px) {
+    .login-container-LOG {
+        align-items: flex-start;
+        padding: 12px;
+        padding-top: 5vh;
+    }
+    
+    .login-card-LOG {
+        padding: 20px;
+    }
+    
+    .input-field-LOG {
+        padding: 10px;
+    }
+    
+    .logo-container-LOG {
+        width: min(80px, 20vmin);
+        height: min(80px, 20vmin);
+        margin-bottom: 16px;
+    }
+}
+
+@supports (-webkit-touch-callout: none) {
+    .login-container-LOG {
+        min-height: -webkit-fill-available;
+    }
+}

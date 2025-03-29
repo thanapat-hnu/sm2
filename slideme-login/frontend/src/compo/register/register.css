@@ -1,0 +1,127 @@
+.register-container-RGT {
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100vw;
+    background-color: #5aaa75;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(16px, 4vmin);
+}
+
+.register-card-RGT {
+    width: min(400px, 92%);
+    background-color: white;
+    border-radius: 16px;
+    padding: min(32px, 6vmin);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.register-title-RGT {
+    color: #5aaa75;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+.register-form-RGT {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group-RGT {
+    width: 100%;
+}
+
+.input-field-RGT {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+}
+
+.input-field-RGT:focus {
+    outline: none;
+    border-color: #5aaa75;
+}
+
+.error-message-RGT {
+    color: #dc3545;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.terms-group-RGT {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-RGT {
+    width: 18px;
+    height: 18px;
+    accent-color: #5aaa75;
+}
+
+.terms-label-RGT {
+    font-size: 14px;
+    color: #666;
+}
+
+.register-button-RGT {
+    width: 100%;
+    padding: 12px;
+    background-color: #5aaa75;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.register-button-RGT:hover {
+    background-color: #4a8f63;
+}
+
+.back-button-RGT {
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    color: #5aaa75;
+    border: 2px solid #5aaa75;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.back-button-RGT:hover {
+    background-color: rgba(90, 170, 117, 0.1);
+}
+
+@media screen and (max-height: 600px) {
+    .register-container-RGT {
+        align-items: flex-start;
+        padding: 12px;
+    }
+    
+    .register-card-RGT {
+        padding: 20px;
+    }
+    
+    .input-field-RGT {
+        padding: 10px;
+    }
+}
+
+@supports (-webkit-touch-callout: none) {
+    .register-container-RGT {
+        min-height: -webkit-fill-available;
+    }
+}
