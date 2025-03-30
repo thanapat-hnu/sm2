@@ -38,27 +38,33 @@ function OTP() {
       setErrorMessage("กรุณากรอก OTP");
       return;
     }
-  
+
     try {
       const response = await axios.post("http://localhost:3000/api/verify-otp", {
         phoneNumber,
         otp: inputCode
       });
-  
+
       if (response.data.success) {
-        // ✅ บันทึกเบอร์เฉพาะตอนสมัคร
         if (location.state?.from === "/register") {
           try {
-            await axios.post("http://localhost:3000/api/insert-phone", { phoneNumber });
+            const checkRes = await axios.post("http://localhost:3000/api/check-phone", {
+              phoneNumber,
+            });
+      
+            if (!checkRes.data.exists) {
+              await axios.post("http://localhost:3000/api/insert-phone", { phoneNumber });
+            }
           } catch (dbError) {
-            console.error("Error saving phone to DB:", dbError);
+            console.error("❌ Error checking or inserting phone:", dbError);
           }
         }
-  
+      
         setAnimateClass("OTP-fadeOut");
         setTimeout(() => {
-          // ✅ ไปหน้า profileedit เสมอ พร้อมส่งเบอร์ไปให้
-          navigate("/profileedit", { state: { phoneNumber } });
+          const from = location.state?.from;
+          const nextRoute = from === "/register" ? "/create" : "/profileedit";
+          navigate(nextRoute, { state: { phoneNumber } });
         }, 500);
       } else {
         setErrorMessage("รหัส OTP ไม่ถูกต้อง กรุณาลองอีกครั้ง");
@@ -69,7 +75,6 @@ function OTP() {
       setErrorMessage("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
     }
   };
-  
 
   const handleBack = () => {
     const fromPath = location.state?.from || "/inputphone";
