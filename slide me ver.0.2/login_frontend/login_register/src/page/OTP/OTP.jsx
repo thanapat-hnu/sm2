@@ -13,10 +13,8 @@ function OTP() {
   const [showOtpPopup, setShowOtpPopup] = useState(false);
   const otpInputRef = useRef(null);
 
-  // รับเบอร์โทรที่ส่งมาจาก Register หรือ Login
   const phoneNumber = location.state?.phoneNumber;
 
-  // เมื่อ component mount ให้เรียก backend ส่ง OTP ผ่าน axios
   useEffect(() => {
     async function sendOtp() {
       try {
@@ -35,32 +33,32 @@ function OTP() {
     if (phoneNumber) sendOtp();
   }, [phoneNumber]);
 
-  // ตรวจสอบ OTP กับ backend และบันทึกเบอร์ลง DB
   const handleNext = async () => {
     if (!inputCode) {
       setErrorMessage("กรุณากรอก OTP");
       return;
     }
-
+  
     try {
       const response = await axios.post("http://localhost:3000/api/verify-otp", {
         phoneNumber,
         otp: inputCode
       });
-
+  
       if (response.data.success) {
-        // ✅ เพิ่มการบันทึกเบอร์ลงฐานข้อมูล
-        try {
-          await axios.post("http://localhost:3000/api/insert-phone", { phoneNumber });
-        } catch (dbError) {
-          console.error("Error saving phone to DB:", dbError);
-          // ไม่หยุด flow หากบันทึก DB ล้มเหลว
+        // ✅ บันทึกเบอร์เฉพาะตอนสมัคร
+        if (location.state?.from === "/register") {
+          try {
+            await axios.post("http://localhost:3000/api/insert-phone", { phoneNumber });
+          } catch (dbError) {
+            console.error("Error saving phone to DB:", dbError);
+          }
         }
-
+  
         setAnimateClass("OTP-fadeOut");
         setTimeout(() => {
-          const nextRoute = location.state.from === "/register" ? "/create" : "/profileedit";
-          navigate(nextRoute, { state: { phoneNumber } });
+          // ✅ ไปหน้า profileedit เสมอ พร้อมส่งเบอร์ไปให้
+          navigate("/profileedit", { state: { phoneNumber } });
         }, 500);
       } else {
         setErrorMessage("รหัส OTP ไม่ถูกต้อง กรุณาลองอีกครั้ง");
@@ -71,6 +69,7 @@ function OTP() {
       setErrorMessage("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
     }
   };
+  
 
   const handleBack = () => {
     const fromPath = location.state?.from || "/inputphone";
@@ -108,8 +107,8 @@ function OTP() {
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
       <div className="otp-footer">
-        <p>ยังไม่ได้รับ OTP ใช่หรือไหม?</p>
-        <button className="otp-btn" onClick={() => { /* ขอ OTP ใหม่ */ }}>ขอรหัสใหม่</button>
+        <p>ยังไม่ได้รับ OTP ใช่หรือไม่?</p>
+        <button className="otp-btn" onClick={() => { /* TODO: implement resend OTP */ }}>ขอรหัสใหม่</button>
       </div>
 
       <div className="otp-next">

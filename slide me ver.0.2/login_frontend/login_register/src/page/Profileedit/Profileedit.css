@@ -128,7 +128,7 @@
 #country {
     width: 100px; /* กำหนดความกว้างของ input */
     height: 40px; /* กำหนดความสูงของ input */
-    padding-left: 30px; /* เว้นพื้นที่ด้านซ้ายเพื่อไม่ให้ข้อความทับกับรูป */
+    padding-left: 60px; /* เว้นพื้นที่ด้านซ้ายเพื่อไม่ให้ข้อความทับกับรูป */
     background-image: url('../img/TH.png'); /* ใส่รูปภาพ */
     background-position: 12px center; /* ตั้งรูปภาพที่ซ้ายสุด */
     background-size: 35px 20px; /* ขนาดรูปภาพที่เล็กลง */
