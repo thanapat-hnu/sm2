@@ -91,27 +91,27 @@ router.get('/get-user', async (req, res) => {
   }
 });
 
-// ✅ ดึงข้อมูลผู้ใช้จาก register
-router.get('/get-register-user', async (req, res) => {
-  const phone = req.query.phone;
+// ✅ ลบบัญชีผู้ใช้ตามเบอร์โทร
+router.post('/delete-user', async (req, res) => {
+  const { phone } = req.body;
 
   if (!phone) {
     return res.status(400).json({ success: false, message: "กรุณาระบุเบอร์โทรศัพท์" });
   }
 
   try {
-    const [rows] = await pool.query("SELECT * FROM register WHERE phone = ?", [phone]);
+    const [rows] = await pool.query("SELECT * FROM users WHERE phone = ?", [phone]);
     if (rows.length === 0) {
-      return res.status(404).json({ success: false, message: "ไม่พบข้อมูลจาก register" });
+      return res.status(404).json({ success: false, message: "ไม่พบผู้ใช้" });
     }
 
-    return res.json({ success: true, user: rows[0] });
+    await pool.query("DELETE FROM users WHERE phone = ?", [phone]);
+    return res.json({ success: true, message: "ลบบัญชีผู้ใช้เรียบร้อยแล้ว" });
+
   } catch (err) {
-    console.error("Get Register User Error:", err.message);
+    console.error("Delete User Error:", err.message);
     return res.status(500).json({ success: false, message: "เกิดข้อผิดพลาดจากเซิร์ฟเวอร์" });
   }
 });
-
-
 
 export default router;

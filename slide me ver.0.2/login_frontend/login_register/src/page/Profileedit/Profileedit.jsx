@@ -29,7 +29,7 @@ function Profileedit() {
 
         if (!res.data.success) {
           res = await axios.get(
-            `http://localhost:3000/api/get-register-user?phone=${phoneNumber}`
+            `http://localhost:3000/api/get-user?phone=${phoneNumber}`
           );
         }
 
@@ -85,15 +85,15 @@ function Profileedit() {
   const handleSave = async () => {
     setIsEditing(false);
 
+    const translatedGender = formData.sex === "male" ? "ชาย" : "หญิง";
+
     const updatedProfileData = {
       email: formData.email,
       firstname: formData.name,
       lastname: formData.lastname,
-      gender: formData.sex,
-      profileImage,
+      gender: translatedGender, // ✅ ส่งเป็น "ชาย"/"หญิง"
       phone: formData.number,
     };
-    
 
     try {
       const res = await axios.post(
@@ -122,7 +122,28 @@ function Profileedit() {
   const handleLogout = () => {
     navigate("/login");
   };
- 
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบบัญชี?");
+    if (!confirmDelete) return;
+
+    try {
+      const res = await axios.post("http://localhost:3000/api/delete-user", {
+        phone: formData.number,
+      });
+
+      if (res.data.success) {
+        alert("ลบบัญชีเรียบร้อยแล้ว");
+        localStorage.removeItem("phoneNumber");
+        navigate("/login"); // หรือ navigate("/login")
+      } else {
+        alert(res.data.message || "ไม่สามารถลบบัญชีได้");
+      }
+    } catch (err) {
+      console.error("Error deleting account:", err);
+      alert("เกิดข้อผิดพลาดขณะลบบัญชี");
+    }
+  };
 
   return (
     <div className="profileedit-container">
@@ -220,9 +241,9 @@ function Profileedit() {
           <button onClick={handleLogout}>ออกจากระบบ</button>
         </div>
 
-        {/* <div className="form-delete">
-          <button onClick={handleDelete}>ลบบัญชี</button>
-        </div> */}
+        <div className="form-delete">
+          <button className="btn-delete" onClick={handleDelete}>ลบบัญชี</button>
+        </div>
       </div>
     </div>
   );
