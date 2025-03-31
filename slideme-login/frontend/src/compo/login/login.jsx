@@ -6,7 +6,7 @@ import './login.css';
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',  // เปลี่ยนจาก email เป็น username
     password: ''
   });
 
@@ -20,20 +20,40 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.email || !formData.password) {
+    if (!formData.username || !formData.password) {  // เปลี่ยนเงื่อนไขการตรวจสอบ
       setError('All fields are required');
       return;
     }
 
-    console.log('Login data:', formData);
-    setFormData({
-      email: '',
-      password: ''
-    });
-    setError('');
+    try {
+      const response = await fetch('http://localhost:3000/drivers/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.username,  // ใช้ username แทน email
+          password: formData.password
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('user', JSON.stringify({
+          username: formData.username  // เก็บ username ลง localStorage
+        }));
+        navigate('/profile');
+      } else {
+        setError(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Connection error. Please try again.');
+    }
   };
 
   const pageTransition = {
@@ -74,10 +94,10 @@ const Login = () => {
           
           <div className="form-group-LOG">
             <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
+              type="text" // เปลี่ยนจาก email เป็น text
+              name="username" // เปลี่ยนชื่อ field
+              placeholder="Username" // เปลี่ยน placeholder
+              value={formData.username} // เปลี่ยนตัวแปรที่ใช้
               onChange={handleChange}
               className="input-field-LOG"
             />

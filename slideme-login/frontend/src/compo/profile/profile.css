@@ -1,41 +1,55 @@
 .profile-container-PRF {
-    min-height: 100vh;
-    min-height: 100dvh;
     width: 100%;
+    min-height: 100vh;
     background-color: #5aaa75;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Changed to center */
-    padding: clamp(16px, 4vmin, 32px);
-    overflow-y: auto;
-    position: absolute; /* Changed from fixed */
+    overflow-y: auto; /* เปิดการ scroll */
+    position: fixed; /* เปลี่ยนเป็น fixed */
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 5vh; /* ลดลงจาก 20vh */
     -webkit-overflow-scrolling: touch;
 }
 
-/* Make wrapper for scrollable content */
 .profile-wrapper-PRF {
     width: 100%;
-    max-width: 400px;
-    margin: auto;
+    max-width: 600px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: min(20px, 4vh);
-    padding: clamp(16px, 5vh, 48px) 0;
+    align-items: center;
+    gap: 20px;
+    position: relative; /* เพิ่มบรรทัดนี้ */
 }
 
 .profile-header-PRF {
-    width: 100%;
+    width: min(300px, 80%);
     background-color: rgba(255, 255, 255, 0.1);
-    padding: min(32px, 6vmin) min(20px, 4vmin);
+    padding: 20px;
     border-radius: 16px;
-    margin-bottom: min(20px, 4vh);
+    margin-bottom: 50px;
     text-align: center;
     color: white;
+    position: relative; /* เปลี่ยนจาก sticky เป็น relative */
+    transition: all 0.3s ease;
+    transform-origin: top;
+    backdrop-filter: blur(8px);
+    flex-shrink: 0;
+    top: 0; /* ลบ top: -50px */
+}
+
+.profile-header-PRF.shrink {
+    transform: scaleY(0.7) translateY(-20px);
+    opacity: 0;
+    padding: 10px;
+    margin-bottom: 10px;
+    pointer-events: none;
 }
 
 .profile-image-container-PRF {
@@ -74,11 +88,13 @@
 }
 
 .profile-content-PRF {
-    width: 100%;
+    width: min(300px, 80%);
     background-color: white;
     border-radius: 16px;
-    padding: min(20px, 4vmin);
-    margin-bottom: min(20px, 4vh);
+    padding: min(32px, 6vmin);
+    margin-top: -30px;
+    margin-bottom: 20px; /* เปลี่ยนจาก auto */
+    position: relative;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
@@ -100,18 +116,64 @@
 }
 
 .info-item-PRF {
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 0.5rem;
 }
 
 .info-label-PRF {
+    font-weight: bold;
     color: #666;
-    font-size: 14px;
 }
 
 .info-value-PRF {
-    font-size: 16px;
+    color: #333;
+}
+
+.info-input-PRF {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+}
+
+select.info-input-PRF {
+    background-color: white;
+    height: 40px;
+}
+
+.edit-buttons-PRF {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.save-button-PRF,
+.cancel-button-PRF,
+.edit-button-PRF {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.save-button-PRF {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.cancel-button-PRF {
+    background-color: #f44336;
+    color: white;
+}
+
+.edit-button-PRF {
+    background-color: #2196F3;
+    color: white;
+    width: 100%;
+    margin-top: 1rem;
 }
 
 .orders-list-PRF {
@@ -164,13 +226,56 @@
     background-color: #bb2d3b;
 }
 
-@media screen and (min-width: 768px) {
+/* ปรับ Media Queries */
+@media screen and (max-width: 768px) {
     .profile-container-PRF {
-        padding: 24px;
+        padding: 10px;
+        padding-top: 3vh; /* ปรับให้น้อยลงสำหรับหน้าจอเล็ก */
     }
     
     .profile-wrapper-PRF {
-        padding: clamp(24px, 8vh, 64px) 0;
+        padding: 10px;
+    }
+    
+    .profile-content-PRF {
+        padding: 15px;
+    }
+}
+
+@media screen and (max-height: 600px) {
+    .profile-container-PRF {
+        padding: 12px;
+        padding-top: 5vh;
+    }
+    
+    .profile-header-PRF {
+        padding: 16px;
+        top: -30px;
+    }
+    
+    .profile-content-PRF {
+        padding: 16px;
+        margin-top: -20px;
+    }
+}
+
+@supports (-webkit-touch-callout: none) {
+    .profile-container-PRF {
+        min-height: -webkit-fill-available;
+    }
+    
+    .profile-content-PRF {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+.profile-content-PRF::-webkit-scrollbar {
+    display: none; /* ซ่อน scrollbar */
+}
+
+@media screen and (min-width: 768px) {
+    .profile-container-PRF {
+        padding-top: 5vh; /* ปรับให้น้อยลง */
     }
 }
 
@@ -215,12 +320,5 @@
 @media screen and (min-width: 768px) and (min-height: 800px) {
     .profile-container-PRF {
         padding-top: 15vh;
-    }
-}
-
-/* Add platform specific adjustments */
-@supports (-webkit-touch-callout: none) {
-    .profile-container-PRF {
-        min-height: -webkit-fill-available;
     }
 }
