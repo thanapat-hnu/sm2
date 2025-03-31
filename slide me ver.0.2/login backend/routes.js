@@ -91,4 +91,27 @@ router.get('/get-user', async (req, res) => {
   }
 });
 
+// ✅ ดึงข้อมูลผู้ใช้จาก register
+router.get('/get-register-user', async (req, res) => {
+  const phone = req.query.phone;
+
+  if (!phone) {
+    return res.status(400).json({ success: false, message: "กรุณาระบุเบอร์โทรศัพท์" });
+  }
+
+  try {
+    const [rows] = await pool.query("SELECT * FROM register WHERE phone = ?", [phone]);
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: "ไม่พบข้อมูลจาก register" });
+    }
+
+    return res.json({ success: true, user: rows[0] });
+  } catch (err) {
+    console.error("Get Register User Error:", err.message);
+    return res.status(500).json({ success: false, message: "เกิดข้อผิดพลาดจากเซิร์ฟเวอร์" });
+  }
+});
+
+
+
 export default router;

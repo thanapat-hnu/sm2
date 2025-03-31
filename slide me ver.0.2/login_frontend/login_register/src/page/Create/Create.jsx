@@ -36,26 +36,22 @@ function Create() {
         try {
             const response = await fetch('http://localhost:3000/api/update-profile', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    phone: phoneNumber, // ✅ ส่งเบอร์ไปด้วย
+                    phone: phoneNumber, // ✅ ใช้เบอร์โทรที่สมัคร
                     email: formData.email,
                     firstname: formData.firstname,
                     lastname: formData.lastname,
                     gender: formData.gender,
                 }),
             });
-
+    
             const result = await response.json();
             console.log(result);
-
+    
             if (result.success) {
-                setAnimateClass('Create-fadeOut');
-                setTimeout(() => {
-                    navigate('/profileedit');
-                }, 500);
+                localStorage.setItem("phoneNumber", phoneNumber); // ✅ เก็บเบอร์โทรใน localStorage
+                navigate('/profileedit', { state: { phoneNumber } }); // ✅ ส่งเบอร์ไป Profileedit
             } else {
                 alert("เกิดข้อผิดพลาด: " + result.message);
             }
@@ -64,7 +60,6 @@ function Create() {
             alert("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
         }
     };
-
     const handleBack = () => {
         setAnimateClass('Create-fadeOut');
         setTimeout(() => {

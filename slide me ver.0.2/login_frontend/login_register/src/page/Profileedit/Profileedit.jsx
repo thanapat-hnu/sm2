@@ -1,36 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import './Profileedit.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import "./Profileedit.css";
 
 function Profileedit() {
   const navigate = useNavigate();
   const location = useLocation();
-  const phoneNumber = location.state?.phoneNumber;
 
-  const [profileImage, setProfileImage] = useState('./img/profile.png');
+  const [profileImage, setProfileImage] = useState("./img/profile.png");
   const [formData, setFormData] = useState({
-    name: '',
-    lastname: '',
-    sex: '',
-    email: '',
-    number: '',
+    name: "",
+    lastname: "",
+    sex: "",
+    email: "",
+    number: "",
   });
   const [isEditing, setIsEditing] = useState(false);
+
+  const phoneNumber =
+    location.state?.phoneNumber || localStorage.getItem("phoneNumber"); // ✅ รับเบอร์จาก state หรือ localStorage
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/get-user?phone=${phoneNumber}`);
+        let res = await axios.get(
+          `http://localhost:3000/api/get-user?phone=${phoneNumber}`
+        );
+
+        if (!res.data.success) {
+          res = await axios.get(
+            `http://localhost:3000/api/get-register-user?phone=${phoneNumber}`
+          );
+        }
+
         if (res.data.success) {
           const user = res.data.user;
+
+          // แปลงค่าจาก "หญิง" เป็น "female" และ "ชาย" เป็น "male"
+          const gender =
+            user.gender === "หญิง"
+              ? "female"
+              : user.gender === "ชาย"
+              ? "male"
+              : "";
+
           setFormData({
-            name: user.firstname,
-            lastname: user.lastname,
-            sex: user.gender,
-            email: user.email,
-            number: user.phone,
+            name: user.firstname || "",
+            lastname: user.lastname || "",
+            sex: gender, // กำหนดค่า gender ที่แปลงแล้ว
+            email: user.email || "",
+            number: user.phone || "",
           });
+
           if (user.profileImage) {
             setProfileImage(user.profileImage);
           }
@@ -43,7 +64,7 @@ function Profileedit() {
       }
     };
 
-    if (phoneNumber) fetchData();
+    if (phoneNumber) fetchData(); // ✅ ดึงข้อมูลเมื่อได้เบอร์
   }, [phoneNumber]);
 
   const handleImageChange = (event) => {
@@ -72,9 +93,13 @@ function Profileedit() {
       profileImage,
       phone: formData.number,
     };
+    
 
     try {
-      const res = await axios.post("http://localhost:3000/api/update-profile", updatedProfileData);
+      const res = await axios.post(
+        "http://localhost:3000/api/update-profile",
+        updatedProfileData
+      );
       if (res.data.success) {
         alert("อัปเดตข้อมูลสำเร็จ");
       } else {
@@ -97,6 +122,7 @@ function Profileedit() {
   const handleLogout = () => {
     navigate("/login");
   };
+ 
 
   return (
     <div className="profileedit-container">
@@ -111,7 +137,7 @@ function Profileedit() {
             type="file"
             accept="image/*"
             id="uploadImage"
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             onChange={handleImageChange}
             disabled={!isEditing}
           />
@@ -146,12 +172,7 @@ function Profileedit() {
         </div>
 
         <div className="form-numbercountry">
-          <input
-            type="text"
-            id="country"
-            value="+66"
-            readOnly
-          />
+          <input type="text" id="country" value="+66" readOnly />
           <input
             type="text"
             name="number"
@@ -179,7 +200,9 @@ function Profileedit() {
             onChange={handleInputChange}
             disabled={!isEditing}
           >
-            <option value="" disabled>เลือกเพศ</option>
+            <option value="" disabled>
+              เลือกเพศ
+            </option>
             <option value="male">ชาย</option>
             <option value="female">หญิง</option>
           </select>
@@ -187,13 +210,19 @@ function Profileedit() {
 
         {isEditing && (
           <div className="form-summit">
-            <button className="btn-summit" onClick={handleSave}>บันทึก</button>
+            <button className="btn-summit" onClick={handleSave}>
+              บันทึก
+            </button>
           </div>
         )}
 
         <div className="form-logout">
           <button onClick={handleLogout}>ออกจากระบบ</button>
         </div>
+
+        {/* <div className="form-delete">
+          <button onClick={handleDelete}>ลบบัญชี</button>
+        </div> */}
       </div>
     </div>
   );
