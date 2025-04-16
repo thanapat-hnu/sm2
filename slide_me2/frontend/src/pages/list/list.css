@@ -1,0 +1,304 @@
+/* ตัวอย่างการลด z-index ของ navbar ถ้าจำเป็น */
+.list-header {
+    z-index: 1; /* ค่าต่ำสุดกว่าของ popup */
+    position: relative;
+}
+
+
+.list-container {
+    width: 100%;
+    max-width: 390px;
+    margin: 0 auto;
+    padding: 16px;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    position: relative;
+    transition: transform 0.5s ease-in-out;
+    overflow: hidden; /* เพิ่มการป้องกัน scroll */
+    height: 100vh; /* ตั้งค่าให้ความสูงเต็มหน้าจอ */
+    box-sizing: border-box; /* ป้องกันการขยายตัวของ padding */
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* ให้ body และ html ใช้ความสูงเต็มหน้าจอ */
+    overflow-x: hidden; /* ป้องกันการ scroll แนวนอน */
+}
+
+.latest-section {
+    overflow: hidden; /* ป้องกันการ scroll เกินในแต่ละ section */
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 12px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    width: 100%; /* ให้ card มีความกว้างเต็ม */
+}
+
+.card-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%; /* ทำให้ card row กว้างเต็ม */
+}
+
+.card-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    color: #ffffff;
+    background-color: #14bf61;
+}
+
+.card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    line-height: 1.4;
+}
+
+.card-price {
+    flex-shrink: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+    text-align: right;
+    white-space: nowrap;
+    margin-left: 12px;
+}
+
+
+.list-container.slide-out {
+    transform: translateX(100%); /* เลื่อนหน้าจอออกไปทางขวา */
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(0);
+        transition: transform 500ms ease-in-out;
+    }
+    to {
+        transform: translateX(-100%);
+    transition: transform 500ms ease-in-out;
+    }
+}
+
+.list-container.slide-in-left {
+    animation: slideInLeft 0.5s ease-out forwards;
+}
+
+
+.list-container {
+    animation: slideIn 0.5s ease-out forwards;
+}
+
+/* History Section ที่จะเพิ่มแอนิเมชัน */
+.history-btn {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.history-btn:hover {
+    background-color: #eeeeee;
+}
+
+.history-btn i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+
+.list-container.slide-out {
+    transform: translateX(100%); /* Slide the whole page out to the right */
+}
+
+/* Header Section */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.list-header h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+}
+
+/* เปลี่ยนการแสดงผลเมื่อปุ่ม "ประวัติ" กด */
+.history-btn {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.history-btn:hover {
+    background-color: #eeeeee;
+}
+
+
+
+/* Section Titles */
+.current-section h2,
+.latest-section h2 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+/* Card Styling */
+.card {
+    display: flex; /* ใช้ Flexbox สำหรับการจัดเรียง */
+    align-items: center; /* จัดให้องค์ประกอบทั้งหมดอยู่กึ่งกลางแนวตั้ง */
+    justify-content: space-between; /* กระจายไอคอน ข้อความ และราคา */
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.card-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* เว้นพื้นที่ระหว่างไอคอนและราคาสุดขอบ */
+}
+
+.card-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 80px;
+    margin-right: 16px;
+    background-color: #14bf61;
+    /* เพิ่ม align-items ของ card */
+    align-self: center; /* ทำให้ icon อยู่ตรงกลางแนวตั้ง */
+}
+
+
+.card-info {
+    flex: 1; /* ใช้พื้นที่ระหว่างไอคอนและราคา */
+    display: flex;
+    flex-direction: column; /* จัดเรียงข้อความในแนวตั้ง */
+    gap: 4px; /* ระยะห่างเล็กน้อยระหว่างบรรทัด */
+    line-height: 1.4; /* ปรับ line-height ให้ดูสมดุล */
+    align-self: center; /* จัดตำแหน่งกลางในแนวตั้ง */
+}
+
+
+/* Specific Text Elements */
+.card-info p {
+    margin: 0;
+    /* ลบ default margin ของ p ที่ทำให้บรรทัดห่างกัน */
+    font-size: 14px;
+    /* ขนาดตัวอักษรเหมาะสมสำหรับการแสดงผล */
+}
+
+.green-bg {
+    background-color: #14bf61;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-content p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #6a6a6a;
+}
+
+.card-date {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.card-status {
+    font-size: 14px;
+    font-weight: bold;
+    color: #14bf61;
+    margin-top: 8px; /* ระยะห่างด้านบนของสถานะ */
+  }
+.green-text {
+    color: #14bf61;
+}
+
+/* Action Buttons */
+.card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.card-actions button {
+    background-color: #0e924a;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.3s ease; /* เพิ่มการเปลี่ยนแปลงสีที่เนียน */
+}
+
+/* สถานะ Hover */
+.card-actions button:hover {
+    background-color: #55c739;
+}
+
+/* สถานะ Active (กดค้างไว้) */
+.card-actions button:active {
+    background-color: #55c739; /* เมื่อกดค้างไว้ สีจะเปลี่ยนเป็นอ่อนลง */
+}
+
+/* Price Section */
+.card-price {
+    flex-shrink: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+    text-align: right;
+    white-space: nowrap; /* ป้องกันการตัดบรรทัด */
+    align-self: center; /* ทำให้ราคาอยู่ตรงกลางแนวตั้ง */
+    margin-left: 12px; /* กำหนดระยะห่างจากเนื้อหากลาง */
+    margin-bottom: 100px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
