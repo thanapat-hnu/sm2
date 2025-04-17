@@ -60,25 +60,60 @@
 }
 
 .location-item {
+  background: white;
   padding: 12px;
-  border: 1px solid #ddd;
   border-radius: 8px;
   margin-bottom: 8px;
   cursor: pointer;
+  border: 1px solid #ddd;
+  transition: all 0.2s;
 }
 
-.location-item:hover {
-  background-color: #f5f5f5;
+.location-item.active {
+  border-color: #14BF61;
+  box-shadow: 0 2px 8px rgba(20, 191, 97, 0.1);
+}
+
+.location-item input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 .location-label {
   font-weight: 500;
-  margin-right: 8px;
-  color: #666;
+  color: #333;
 }
 
 .location-text {
-  color: #333;
+  display: block;
+  margin-top: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.location-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.confirm-button {
+  background-color: #14BF61;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.confirm-button:hover {
+  background-color: #0fa553;
 }
 
 .route-button {
@@ -118,3 +153,4 @@
 .locate-button:active {
   transform: scale(0.95);
 }
+

@@ -8,9 +8,10 @@ function Map() {
   const [destMarker, setDestMarker] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const [isSelectingOrigin, setIsSelectingOrigin] = useState(true);
+  const [activeSearch, setActiveSearch] = useState(null); // 'origin' or 'destination'
   const [originText, setOriginText] = useState('');
   const [destText, setDestText] = useState('');
+  const [isApiLoaded, setIsApiLoaded] = useState(false);
   const API_KEY = '1b4327452cc20e14a37e40cc130bd03a';
 
   // Load Longdo Map script + init
@@ -22,8 +23,10 @@ function Map() {
         zoom: 15
       });
       setMap(mapInstance);
+      setIsApiLoaded(true); // Set API as loaded
     };
 
+    // Check if API is already loaded
     if (window.longdo && window.longdo.Map) {
       loadMap();
     } else {
@@ -31,9 +34,13 @@ function Map() {
       script.src = `http://api.longdo.com/map/?key=${API_KEY}`;
       script.async = true;
       script.onload = () => {
-        if (window.longdo && window.longdo.Map) {
-          loadMap();
-        }
+        // Wait for the API to be fully initialized
+        const checkAPI = setInterval(() => {
+          if (window.longdo && window.longdo.Map) {
+            clearInterval(checkAPI);
+            loadMap();
+          }
+        }, 100);
       };
       document.body.appendChild(script);
 
@@ -45,47 +52,34 @@ function Map() {
     }
   }, []);
 
-  const searchLocation = (keyword) => {
-    if (!keyword.trim() || !map) return;
+  const searchLocation = async (keyword) => {
+    if (!keyword.trim()) return;
 
-    // ใช้ Promise เพื่อให้แน่ใจว่า API พร้อมใช้งาน
-    const checkAPI = () => {
-      return new Promise((resolve) => {
-        const check = () => {
-          if (window.longdo && window.longdo.Map) {
-            resolve();
-          } else {
-            setTimeout(check, 100);
-          }
-        };
-        check();
-      });
-    };
-
-    checkAPI().then(() => {
-      // ใช้ Search Service แทน Location API
-      const search = new window.longdo.SearchService();
-      search.search(keyword, {
-        area: true, // ค้นหาสถานที่
-        address: true, // ค้นหาที่อยู่
-        locality: true, // ค้นหาตำบล/อำเภอ/จังหวัด
-        limit: 5, // จำกัดผลลัพธ์
-      }, (result) => {
-        if (result && result.data) {
-          // จัดรูปแบบผลลัพธ์
-          const formattedResults = result.data.map(place => ({
-            name: place.name,
-            address: place.address,
-            lon: place.lon,
-            lat: place.lat
-          }));
-          setSuggestions(formattedResults);
-        }
-      });
-    });
+    try {
+      const response = await fetch(`/api/map/search?keyword=${encodeURIComponent(keyword)}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data && data.data) {
+        const formattedResults = data.data.map(place => ({
+          name: place.name,
+          address: place.address,
+          lon: place.lon,
+          lat: place.lat
+        }));
+        setSuggestions(formattedResults);
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      setSuggestions([]);
+    }
   };
 
-  // ปรับปรุง handle input change ด้วย debounce
+  // Update debounce function to handle async
   const debounceSearch = (value) => {
     if (window.searchTimeout) {
       clearTimeout(window.searchTimeout);
@@ -101,12 +95,12 @@ function Map() {
       lat: place.lat
     };
 
-    if (isSelectingOrigin) {
+    if (activeSearch === 'origin') {
       if (originMarker) {
         map.Overlays.remove(originMarker);
       }
       const marker = new window.longdo.Marker(location, {
-        title: 'ต้นทาง',
+        title: 'ต้นทาง (รอยืนยัน)',
         detail: place.name
       });
       map.Overlays.add(marker);
@@ -117,7 +111,7 @@ function Map() {
         map.Overlays.remove(destMarker);
       }
       const marker = new window.longdo.Marker(location, {
-        title: 'ปลายทาง',
+        title: 'ปลายทาง (รอยืนยัน)',
         detail: place.name
       });
       map.Overlays.add(marker);
@@ -125,9 +119,33 @@ function Map() {
       setDestText(place.name);
     }
 
+    map.location(location, true);
     setSearchQuery('');
     setSuggestions([]);
-    map.location(location, true);
+  };
+
+  const confirmLocation = () => {
+    if (activeSearch === 'origin' && originMarker) {
+      const location = originMarker.location();
+      map.Overlays.remove(originMarker);
+      const confirmedMarker = new window.longdo.Marker(location, {
+        title: 'ต้นทาง',
+        detail: originText
+      });
+      map.Overlays.add(confirmedMarker);
+      setOriginMarker(confirmedMarker);
+      setActiveSearch(null);
+    } else if (activeSearch === 'destination' && destMarker) {
+      const location = destMarker.location();
+      map.Overlays.remove(destMarker);
+      const confirmedMarker = new window.longdo.Marker(location, {
+        title: 'ปลายทาง',
+        detail: destText
+      });
+      map.Overlays.add(confirmedMarker);
+      setDestMarker(confirmedMarker);
+      setActiveSearch(null);
+    }
   };
 
   const showRoute = () => {
@@ -142,45 +160,79 @@ function Map() {
     map.Route.search();
   };
 
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    debounceSearch(value);
+  };
+
   return (
     <div className="map-container">
       <div className="search-container">
-        <div className="search-box">
-          <input
-            type="text"
-            placeholder={isSelectingOrigin ? "ค้นหาต้นทาง" : "ค้นหาปลายทาง"}
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              debounceSearch(e.target.value);
-            }}
-          />
-          {suggestions.length > 0 && (
-            <div className="suggestions">
-              {suggestions.map((place, index) => (
-                <div
-                  key={index}
-                  className="suggestion-item"
-                  onClick={() => handleSuggestionClick(place)}
-                >
-                  <div className="suggestion-title">{place.name}</div>
-                  <div className="suggestion-address">{place.address}</div>
-                </div>
-              ))}
+        <div className="selected-locations">
+          <div 
+            className={`location-item ${activeSearch === 'origin' ? 'active' : ''}`}
+            onClick={() => setActiveSearch('origin')}
+          >
+            <div className="location-header">
+              <span className="location-label">ต้นทาง</span>
+              {originMarker && activeSearch === 'origin' && (
+                <button className="confirm-button" onClick={confirmLocation}>
+                  ยืนยัน
+                </button>
+              )}
             </div>
-          )}
+            {activeSearch === 'origin' ? (
+              <input
+                type="text"
+                placeholder="ค้นหาต้นทาง..."
+                value={searchQuery}
+                onChange={handleInputChange}
+              />
+            ) : (
+              <span className="location-text">{originText || 'กดเพื่อค้นหาต้นทาง'}</span>
+            )}
+          </div>
+
+          <div 
+            className={`location-item ${activeSearch === 'destination' ? 'active' : ''}`}
+            onClick={() => setActiveSearch('destination')}
+          >
+            <div className="location-header">
+              <span className="location-label">ปลายทาง</span>
+              {destMarker && activeSearch === 'destination' && (
+                <button className="confirm-button" onClick={confirmLocation}>
+                  ยืนยัน
+                </button>
+              )}
+            </div>
+            {activeSearch === 'destination' ? (
+              <input
+                type="text"
+                placeholder="ค้นหาปลายทาง..."
+                value={searchQuery}
+                onChange={handleInputChange}
+              />
+            ) : (
+              <span className="location-text">{destText || 'กดเพื่อค้นหาปลายทาง'}</span>
+            )}
+          </div>
         </div>
 
-        <div className="selected-locations">
-          <div className="location-item" onClick={() => setIsSelectingOrigin(true)}>
-            <span className="location-label">ต้นทาง:</span>
-            <span className="location-text">{originText || 'กรุณาเลือกต้นทาง'}</span>
+        {suggestions.length > 0 && (
+          <div className="suggestions">
+            {suggestions.map((place, index) => (
+              <div
+                key={index}
+                className="suggestion-item"
+                onClick={() => handleSuggestionClick(place)}
+              >
+                <div className="suggestion-title">{place.name}</div>
+                <div className="suggestion-address">{place.address}</div>
+              </div>
+            ))}
           </div>
-          <div className="location-item" onClick={() => setIsSelectingOrigin(false)}>
-            <span className="location-label">ปลายทาง:</span>
-            <span className="location-text">{destText || 'กรุณาเลือกปลายทาง'}</span>
-          </div>
-        </div>
+        )}
 
         {originMarker && destMarker && (
           <button className="route-button" onClick={showRoute}>
