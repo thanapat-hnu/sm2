@@ -1,79 +1,231 @@
-.btn-back{
-    background-color: #fff;
-    color: #FF3D00;
-    border: none;
-    font-size: 1rem;
-    position: absolute;
-    top: 50px;
-    left: 20px;
+/* Modern Registration Form CSS */
+:root {
+  --primary-color: #14bf61;
+  --primary-light: #e6f7ee;
+  --text-color: #333;
+  --border-color: #ddd;
+  --error-color: #e74c3c;
+  --background-color: #f9f9f9;
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Prompt", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+  overscroll-behavior-y: contain;
+}
+
+.container-login {
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content */
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.8rem; /* Reduced padding */
+  animation: slideIn 0.3s ease-out;
+}
+
+.container-login::-webkit-scrollbar {
+  display: none;
+}
+
+.slide-out {
+  animation: slideOut 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
   }
-  
-  .coolinput {
-    display: flex;
-    flex-direction: column;
-    width: fit-content;
-    position: static;
-    /* max-width: 240px; */
-    width: 340px;
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
-  
-  .coolinput label.text {
-    font-size: 0.75rem;
-    color: #14BF61;
-    font-weight: 700;
-    position: relative;
-    top: 0.5rem;
-    margin: 0 0 0 7px;
-    padding: 0 3px;
-    background: #fff;
-    width: fit-content;
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
   }
-  
-  .coolinput input[type=text].input {
-    padding: 15px 10px;
-    font-size: 0.75rem;
-    border: 2px #14BF61 solid;
-    border-radius: 5px;
-    background: #fff;
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
   }
-  
-  .coolinput input[type=text].input:focus {
-    outline: none;
-  }
-  
-  .container-login {
-    display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .formReg{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 100px;
-  }
-  
-  .btn-login {
-    background-color: #14BF61;
-    color: #fff;
-    border: none;
-    border-radius: 30px;
-    padding: 15px 120px;
-    margin-top: 10px;
-    font-size: 1rem;
-    position: absolute;
-    bottom: 40px;
-  }
-  
-  .btn-login:hover {
-    background-color: #fff;
-    color: #14BF61;
-    border: 2px #14BF61 solid;
-  }
+}
+
+.formReg {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 280px; /* Slightly reduced width */
+  padding: 0;
+  position: relative;
+  margin-top: 1rem;
+}
+
+/* Remove the margin-bottom for last child since we're removing fixed positioning */
+.formReg > *:last-child {
+  margin-bottom: 1rem;
+}
+
+/* Add container for header section */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  margin-bottom: 1.5rem;
+  gap: 1rem; /* Add space between back button and title */
+}
+
+h1 {
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  text-align: center;
+  font-weight: 600;
+  margin: 0;
+  padding: 0; /* Remove padding */
+  flex: none; /* Remove flex growing */
+}
+
+.coolinput {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0.3rem; /* Reduced margin */
+}
+
+.text {
+  display: block;
+  font-size: 0.8rem; /* Smaller font */
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 0.3rem; /* Reduced margin */
+}
+
+.input {
+  width: 100%;
+  padding: 0.6rem; /* Reduced padding */
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px; /* Slightly reduced border radius */
+  font-size: 0.9rem; /* Smaller font */
+  background-color: white;
+  transition: var(--transition);
+  -webkit-appearance: none;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(20, 191, 97, 0.1);
+}
+
+select.input {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
+}
+
+textarea.input {
+  min-height: 80px; /* Reduced height */
+  resize: vertical;
+}
+
+.btn-back {
+  display: flex;
+  align-items: center;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  transition: var(--transition);
+  position: relative; /* Changed from absolute */
+  right: 20%; /* Remove absolute positioning */
+  top: auto;
+  transform: none;
+  z-index: 1;
+}
+
+.btn-back:active {
+  transform: scale(0.97);
+}
+
+.btn-login {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem; /* Reduced padding */
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 100%;
+  max-width: 300px; /* Match form width */
+  margin: 2rem 0 1rem 0;
+  box-shadow: 0 2px 8px rgba(20, 191, 97, 0.2);
+  /* Remove fixed positioning */
+  position: static;
+  transform: none;
+}
+
+input[type="file"] {
+  padding: 0.6rem;
+  background-color: var(--primary-light);
+  border-radius: 10px;
+  width: 100%;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.4rem 0.8rem; /* Reduced padding */
+  border: none;
+  border-radius: 6px;
+  margin-right: 0.8rem;
+  cursor: pointer;
+}
+
+/* Fix for iOS date inputs */
+input[type="date"] {
+  min-height: 2.8rem;
+}
+
+/* Add loading state */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Improved touch targets for mobile */
+button, 
+input, 
+select {
+  min-height: 44px;
+}
