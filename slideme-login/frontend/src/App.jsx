@@ -7,6 +7,7 @@ import Register from './compo/register/registerPersonal';  // Updated import
 import RegisterVehicle from './compo/register/registerVehicle';  // New import
 import Profile from './compo/profile/profile';
 import Main from './compo/main/main';
+import { RegistrationProvider } from './context/RegistrationContext';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -27,9 +28,11 @@ function AnimatedRoutes() {
 
 function App() {
   return (
-    <Router>
-      <AnimatedRoutes />
-    </Router>
+    <RegistrationProvider>
+      <Router>
+        <AnimatedRoutes />
+      </Router>
+    </RegistrationProvider>
   );
 }
 
