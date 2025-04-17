@@ -5,13 +5,15 @@
   align-items: center;
   width: 100vw;
   height: 100vh;
+  padding-bottom: 100px;
 }
 
 .btn-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: absolute;
+  position: relative;
+  z-index: 1;
   top: 50px;
   width: 90vw;
 }
@@ -62,21 +64,27 @@
   padding: 15px 30px;
   font-size: 1rem;
   font-weight: 700;
-  position: absolute;
-  bottom: 155px;
+  position: fixed;
+  z-index: 11;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .btn-bottom {
   display: flex;
   background-color: #151515;
-  width: 90vw;
-  height: 100px;
-  border-radius: 10px;
-  position: absolute;
-  bottom: 40px;
+  width: 100%;
+  height: 80px;
+  border-radius: 10px 10px 0 0;
+  position: fixed;
+  z-index: 10;
+  bottom: 0;
+  left: 0;
   color: #fff;
   justify-content: space-around;
   align-items: center;
+  padding: 0 16px;
 }
 
 .btn-bottom-item1,
@@ -87,6 +95,16 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 4px;
+  padding: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-bottom-item1:active,
+.btn-bottom-item2:active,
+.btn-bottom-item3:active,
+.btn-bottom-item4:active {
+  transform: scale(0.95);
 }
 
 .btn-bottom-icon {
@@ -97,7 +115,7 @@
   color: #fff;
   border: none;
   border-radius: 30px;
-  padding: 15px 15px;
+  padding: 12px;
 }
 
 .btn-bottom-item1 label,
@@ -105,7 +123,6 @@
 .btn-bottom-item3 label,
 .btn-bottom-item4 label {
   font-size: 0.85rem;
-  /* font-weight: 700; */
 }
 
 .map {
@@ -116,4 +133,21 @@
   height: 100vh;
   z-index: -1;
   background-color: aqua;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Add safe area for iOS devices */
+@supports (padding: max(0px)) {
+  .btn-bottom {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    height: max(80px, calc(80px + env(safe-area-inset-bottom)));
+  }
 }

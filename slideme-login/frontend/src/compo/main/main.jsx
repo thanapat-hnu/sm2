@@ -1,7 +1,7 @@
 import "boxicons";
 import "./main.css";
 import { useState } from "react";
-// import Map from '../map/map';
+import Map from '../map/map';
 
 function Main() {
   const [status, setStatus] = useState(false);
@@ -85,7 +85,9 @@ function Main() {
         </div>
       </div>
       {/* แผนที่ */}
-      <div id="map">{/* <Map /> */}</div>
+      <div id="map">
+        <Map />
+      </div>
     </div>
   );
 }
