@@ -1,299 +1,36 @@
-/* Reset and base styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    height: 100%;
-    overflow: hidden;
-}
-
-/* Main container */
-.start-container {
-    min-height: 100vh;
-    min-height: 100dvh; /* Modern viewport height */
-    width: 100vw;
-    background-color: #5aaa75;
+.container-home{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: flex-start; /* Changed from center */
-    padding: max(16px, 4vmin);
-    padding-top: 20vh; /* Add top padding instead of centering */
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.start-container-STT {
-    min-height: 100vh;
-    min-height: 100dvh;
-    width: 100vw;
-    background-color: #5aaa75;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: max(16px, 4vmin);
-    padding-top: 20vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Logo styles */
-.logo-container {
-    width: min(100px, 25vmin);
-    height: min(100px, 25vmin);
-    background-color: white;
-    border-radius: 50%;
-    margin-bottom: 20px; /* Reduced spacing */
-    display: flex;
-    align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    flex-shrink: 0;
-    position: relative;
-    top: 0; /* Remove negative top position */
+    width: 100vw;
+    height: 100vh;
+    color: #fff;
+    background-color: hsl(147, 81%, 41%);
+    font-family: 'Kanit', sans-serif;
 }
 
-.logo-container-STT {
-    width: min(100px, 25vmin);
-    height: min(100px, 25vmin);
-    background-color: white;
-    border-radius: 50%;
-    margin-bottom: 20px;
+.title{
+    margin-left: 20px;
+}
+
+.reg-log{
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    flex-shrink: 0;
+    align-items: center;
+    position: absolute;
+    bottom: 40px;
+    width: 100vw;
 }
 
-.logo-text {
-    font-size: min(20px, 5vmin);
-    color: #5aaa75;
-    font-weight: 600;
+.btn{
+    background-color: #fff;
+    color: #000;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 120px;
 }
 
-.logo-text-STT {
-    font-size: min(20px, 5vmin);
-    color: #5aaa75;
-    font-weight: 600;
-}
-
-/* Card styles */
-.card-container {
-    width: min(300px, 80%);
-    background-color: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    padding: min(32px, 6vmin);
-    margin-top: 50px;
-    margin-bottom: auto;
-    position: relative;
-    top: 0; /* Remove negative top position */
-}
-
-.card-container-STT {
-    width: min(300px, 80%);
-    background-color: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    padding: min(32px, 6vmin);
-}
-
-.card-header {
-    text-align: center;
-    margin-bottom: min(24px, 4vh); /* Reduced margin */
-}
-
-.card-header-STT {
-    text-align: center;
-    margin-bottom: min(24px, 4vh);
-}
-
-.card-title {
-    font-size: min(28px, 6vmin);
-    font-weight: bold;
-    color: #5aaa75;
-    margin-bottom: 8px;
-    line-height: 1.2;
-}
-
-.card-title-STT {
-    font-size: min(28px, 6vmin);
-    font-weight: bold;
-    color: #5aaa75;
-    margin-bottom: 8px;
-    line-height: 1.2;
-}
-
-.card-subtitle {
-    color: #666;
-    font-size: min(16px, 4vmin);
-    line-height: 1.4;
-}
-
-.card-subtitle-STT {
-    color: #666;
-    font-size: min(16px, 4vmin);
-    line-height: 1.4;
-}
-
-/* Button styles */
-.button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.button-container-STT {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.login-button,
-.register-button {
-    width: 100%;
-    padding: min(16px, 4vmin);
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: min(16px, 4vmin);
-    font-weight: 500;
-    transition: all 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
-    border: 2px solid #5aaa75;
-}
-
-.login-button-STT,
-.register-button-STT {
-    width: 100%;
-    padding: min(16px, 4vmin);
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: min(16px, 4vmin);
-    font-weight: 500;
-    transition: all 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
-    border: 2px solid #5aaa75;
-}
-
-.login-button {
-    background-color: #5aaa75;
-    color: white;
-}
-
-.login-button-STT {
-    background-color: #5aaa75;
-    color: white;
-}
-
-.login-button:active {
-    transform: scale(0.98);
-    background-color: #4a8f63;
-}
-
-.login-button-STT:active {
-    transform: scale(0.98);
-    background-color: #4a8f63;
-}
-
-.register-button {
-    background-color: transparent;
-    color: #5aaa75;
-}
-
-.register-button-STT {
-    background-color: transparent;
-    color: #5aaa75;
-}
-
-.register-button:active {
-    transform: scale(0.98);
-    background-color: rgba(90, 170, 117, 0.1);
-}
-
-.register-button-STT:active {
-    transform: scale(0.98);
-    background-color: rgba(90, 170, 117, 0.1);
-}
-
-/* Platform specific adjustments */
-@supports (-webkit-touch-callout: none) {
-    .start-container {
-        min-height: -webkit-fill-available;
-    }
-    
-    .start-container-STT {
-        min-height: -webkit-fill-available;
-    }
-}
-
-/* Media queries */
-@media screen and (max-height: 600px) {
-    .start-container {
-        padding: 12px;
-        padding-top: 5vh; /* Less padding for smaller screens */
-    }
-    
-    .start-container-STT {
-        padding: 12px;
-        padding-top: 5vh;
-    }
-    
-    .logo-container {
-        width: min(80px, 20vmin);
-        height: min(80px, 20vmin);
-        margin-bottom: 16px; /* Even smaller gap for small screens */
-        top: 0; /* Remove negative top position */
-    }
-    
-    .logo-container-STT {
-        width: min(80px, 20vmin);
-        height: min(80px, 20vmin);
-        margin-bottom: 16px;
-    }
-    
-    .card-container {
-        padding: 16px;
-        top: 0; /* Remove negative top position */
-    }
-    
-    .card-container-STT {
-        padding: 16px;
-    }
-    
-    .card-header {
-        margin-bottom: 16px; /* Reduced margin */
-    }
-    
-    .card-header-STT {
-        margin-bottom: 16px;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    .login-button:hover {
-        background-color: #4a8f63;
-    }
-    
-    .login-button-STT:hover {
-        background-color: #4a8f63;
-    }
-    
-    .register-button:hover {
-        background-color: rgba(90, 170, 117, 0.1);
-    }
-    
-    .register-button-STT:hover {
-        background-color: rgba(90, 170, 117, 0.1);
-    }
+.btn:hover{
+    background-color: #efefef;
 }

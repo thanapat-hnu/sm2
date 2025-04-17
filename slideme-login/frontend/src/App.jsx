@@ -5,6 +5,9 @@ import Start from './compo/start/start';
 import Login from './compo/login/login';
 import Register from './compo/register/register';
 import Profile from './compo/profile/profile';
+import Main from './compo/main/main';
+
+
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -16,6 +19,7 @@ function AnimatedRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/main" element={<Main />} />
       </Routes>
     </AnimatePresence>
   );
