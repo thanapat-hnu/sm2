@@ -34,3 +34,12 @@
     display: none !important;
     /* ซ่อนคำแนะนำเส้นทางทั้งหมด */
 }
+
+#map {
+    position: absolute; /* ✅ ต้องเป็น absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 0;
+}

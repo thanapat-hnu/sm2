@@ -190,39 +190,7 @@ function Locat({
                 </button>
             </div>
 
-            <button
-                style={showDev ? { display: "block" } : { display: "none" }}
-                onClick={() => setShowDev(false)}
-                type="button"
-                className="btn btn-primary"
-            >
-                Developer
-            </button>
-
-            <div
-                style={showDev === false ? { display: "flex" } : { display: "none" }}
-                className="bbbb"
-            >
-                <button
-                    onClick={() => setShowDev(true)}
-                >X</button>
-                <img src="../public/b.png" alt="" />
-                <h4>66031036</h4>
-                <h4>นาย ธนภัทร หนูบุญมี</h4>
-                <p>home, map(leaflet), calender,<br /> ค้นหาเส้นทาง (react leaflet routing machine)<hr /></p>
-                <img src="../public/m.png" alt="" />
-                <h4>66002022</h4>
-                <h4>นายคฑาวุธ เมืองพรหม</h4>
-                <p>Login, Register, Profile<hr /></p>
-                <img src="../public/k.png" alt="" />
-                <h4>66073816</h4>
-                <h4>นายอภิวิชญ์ สายแสน</h4>
-                <p>List, History, Chat<hr /></p>
-                <img src="../public/g.png" alt="" />
-                <h4>66080435</h4>
-                <h4>นายศุภวิช​ญ์ ขะจัดโรคา</h4>
-                <p>Payment ทั้งหมด</p>
-            </div>
+           
 
             {/* ปฏิทิน */}
             <div>

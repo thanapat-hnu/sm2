@@ -1,6 +1,11 @@
 .container-locat {
-    margin-top: 25px;
+    position: absolute; /* ✅ เพิ่ม */
+    top: 20px;
+    left: 0;
+    width: 100%;
     z-index: 1001;
+    display: grid;
+    justify-items: center; /* ตรงกลางแนวนอน */
 }
 
 .button {

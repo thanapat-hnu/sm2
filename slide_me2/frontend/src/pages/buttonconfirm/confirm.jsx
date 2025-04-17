@@ -1,106 +1,114 @@
 import { useState } from 'react';
+import './confirm.css';
 
-import './confirm.css'
-
-function Confirm({ button, setButton, local, readLocal, setReadLocal,
-    readLocalB, setReadLocal2, options, setOptions, service, setService, showService, setShowService,
-    buttonText, setButtonText, showMarker, setShowMarker, setShowfinish, showButton, setShowButton,
+function Confirm({
+  button,
+  setButton,
+  local,
+  readLocal,
+  setReadLocal,
+  readLocalB,
+  setReadLocal2,
+  options,
+  setOptions,
+  service,
+  setService,
+  showService,
+  setShowService,
+  buttonText,
+  setButtonText,
+  showMarker,
+  setShowMarker,
+  setShowfinish,
+  showButton,
+  setShowButton,
 }) {
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
 
-    const [i, setI] = useState(false)
+  const isButtonVisible =
+    button === 'a' || button === 'b' || (showService && service);
 
-    const isButtonVisible = button === 'a' || button === 'b' || (showService === true && service === true);
+  const isDataValid =
+    readLocal.lat !== 0 &&
+    readLocal.lng !== 0 &&
+    readLocalB.lat !== 0 &&
+    readLocalB.lng !== 0 &&
+    options !== '' &&
+    showButton;
 
-    const isDataValid =
-        (
-            readLocal.lat !== 0 &&
-            readLocal.lng !== 0 &&
-            readLocalB.lat !== 0 &&
-            readLocalB.lng !== 0 &&
-            options !== '' &&
-            showButton === true
-        )
+  const shouldDisplay = isButtonVisible || isDataValid;
 
-    const shouldDisplay = isButtonVisible || isDataValid;
+  const handleConfirm = () => {
+    if (button === 'a') {
+      setReadLocal(local);
+      console.log('✅ ตำแหน่งต้นทาง:', local);
+      setButton('');
+    } else if (button === 'b') {
+      setReadLocal2(local);
+      console.log('✅ ตำแหน่งปลายทาง:', local);
+      setButton('');
+    } else if (showService) {
+      setShowService(false);
+    }
 
-    return (
-        <div className='container-button'>
+    if (isDataValid && !showService && button !== 'a' && button !== 'b') {
+      setButtonText('...');
+    }
 
-            <button className='button-d'
-                onClick={() => {
-                    if (button === 'a') {
-                        setReadLocal(local)
-                        console.log('readLocal = ' + 'lat : ' + readLocal.lat + ' |' + ' lng : ' + readLocal.lng);
-                        setButton('');
+    if (buttonText === '...') {
+      setShowMarker(true);
+    }
+  };
 
-                    } else if (button === 'b') {
-                        setReadLocal2(local)
-                        console.log('readLocal2 = ' + 'lat : ' + readLocalB.lat + ' |' + ' lng : ' + readLocalB.lng);
-                        setButton('');
+  const handleCancel = () => {
+    setButtonText('ค้นหาผู้ให้บริการ');
+    setShowMarker(false);
+    setShowfinish(false);
+    setShowCancelPopup(false);
+  };
 
-                    } else if (showService === true) {
-                        setShowService(false)
-                    }
+  return (
+    <div className="container-button">
+      {/* ปุ่มยืนยัน */}
+      <button
+        className="button-d"
+        onClick={handleConfirm}
+        style={shouldDisplay ? { display: 'flex' } : { display: 'none' }}
+      >
+        {isDataValid && !showService && button !== 'a' && button !== 'b'
+          ? buttonText
+          : 'ยืนยัน'}
+      </button>
 
-                    if (isDataValid && showService === false && button !== 'a' && button !== 'b') {
-                        setButtonText('...')
-                    }
+      {/* ปุ่มแสดงป๊อปอัพ "ยกเลิก" */}
+      <button
+        className="button-e"
+        onClick={() => setShowCancelPopup(!showCancelPopup)}
+        style={
+          buttonText === '...' && isDataValid
+            ? { display: 'flex' }
+            : { display: 'none' }
+        }
+      >
+        <i className="bi bi-exclamation-circle"></i>
+      </button>
 
-                    if (buttonText === '...') {
-                        setShowMarker(true)
-                    }
-
-                    // console.log('local = ' + 'lat : ' + local.lat + ' |' + ' lng : ' + local.lng);
-
-
-                }
-                }
-                style={shouldDisplay ? { display: 'flex' } : { display: 'none' }}
-            >
-                {isDataValid && showService === false && button !== 'a' && button !== 'b' ? buttonText : 'ยืนยัน'}
+      {/* ป๊อปอัพยืนยันการยกเลิก */}
+      <div
+        className="container-i"
+        style={{ display: showCancelPopup ? 'flex' : 'none' }}
+      >
+        <button className="i1" onClick={() => setShowCancelPopup(false)} />
+        <div className="i2">
+          <div className="i3">
+            <button className="b2" onClick={handleCancel}>
+              ยกเลิก
             </button>
-
-            <button
-                onClick={() => {
-                    setI(!i)
-                }}
-                style={buttonText === '...' && isDataValid ? { display: 'flex' } : { display: 'none' }}
-                className='button-e'
-            >
-                <i className='bi bi-exclamation-circle'></i>
-            </button>
-
-
-            <div
-                className='container-i'
-                style={i ? { display: 'flex' } : { display: 'none' }}
-            >
-                <button
-                    onClick={() => {
-                        setI(!i)
-                    }}
-                    className='i1'
-                >
-
-                </button>
-                <div className='i2'>
-                    <div className='i3'>
-                        <button
-                            onClick={() => {
-                                setButtonText('ค้นหาผู้ให้บริการ')
-                                setI(!i)
-                                setShowMarker(false)
-                                setShowfinish(false)
-
-                            }}
-                            className='b2'
-
-                        >ยกเลิก</button>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
 export default Confirm;
