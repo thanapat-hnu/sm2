@@ -1,11 +1,14 @@
 import "boxicons";
 import "./main.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Map from '../map/map';
 
 function Main() {
+  const navigate = useNavigate();
   const [status, setStatus] = useState(false);
   const [income, setIncome] = useState(false);
+  const [isRoutePopupOpen, setIsRoutePopupOpen] = useState(false);
 
   return (
     <div className="container-main">
@@ -42,49 +45,65 @@ function Main() {
       {/* ปุ่มออนไลน์ */}
       <button
         className="btn-online"
-        onClick={() => {
-          setStatus(!status);
+        onClick={() => setStatus(!status)}
+        style={{
+          backgroundColor: status ? "#14BF61" : "#232323"
         }}
-        style={
-          status
-            ? { backgroundColor: "#14BF61" }
-            : { backgroundColor: "#232323" }
-        }
       >
         <box-icon name="power-off" color="#ffffff"></box-icon>&nbsp;ออนไลน์
       </button>
       {/* ปุ่มด้านล่าง */}
       <div className="btn-bottom">
-        {/* ปุ่ม ... */}
-        <div className="btn-bottom-item1">
+        {/* หน้าหลัก */}
+        <div className="btn-bottom-item1" onClick={() => setIsRoutePopupOpen(true)}>
           <div className="btn-bottom-icon">
-            <box-icon type="logo" name="postgresql" color="#fff"></box-icon>
+            <box-icon name="map-alt" color="#fff"></box-icon>
           </div>
-          <label htmlFor="">btn1</label>
+          <label>หน้าหลัก</label>
         </div>
-        {/* ปุ่ม ... */}
-        <div className="btn-bottom-item2">
+
+        {/* งานที่รับ */}
+        <div className="btn-bottom-item2" onClick={() => navigate('/orders')}>
           <div className="btn-bottom-icon">
-            <box-icon type="logo" name="postgresql" color="#fff"></box-icon>
+            <box-icon name="package" color="#fff"></box-icon>
           </div>
-          <label htmlFor="">btn2</label>
+          <label>งานที่รับ</label>
         </div>
-        {/* ปุ่ม ... */}
-        <div className="btn-bottom-item3">
+
+        {/* แชท */}
+        <div className="btn-bottom-item3" onClick={() => navigate('/chat')}>
           <div className="btn-bottom-icon">
-            <box-icon type="logo" name="postgresql" color="#fff"></box-icon>
+            <box-icon name="message-rounded-dots" color="#fff"></box-icon>
           </div>
-          <label htmlFor="">btn3</label>
+          <label>แชท</label>
         </div>
-        {/* ปุ่ม ... */}
-        <div className="btn-bottom-item4">
+
+        {/* โปรไฟล์ */}
+        <div className="btn-bottom-item4" onClick={() => navigate('/profile')}>
           <div className="btn-bottom-icon">
-            <box-icon type="logo" name="postgresql" color="#fff"></box-icon>
+            <box-icon name="user" color="#fff"></box-icon>
           </div>
-          <label htmlFor="">btn4</label>
+          <label>โปรไฟล์</label>
         </div>
       </div>
-      {/* แผนที่ */}
+      {/* Popup for route selection */}
+      {isRoutePopupOpen && (
+        <div className="route-popup">
+          <div className="route-popup-content">
+            <div className="route-popup-header">
+              <h3>เลือกเส้นทาง</h3>
+              <button 
+                className="close-button"
+                onClick={() => setIsRoutePopupOpen(false)}
+              >
+                <box-icon name="x" color="#333"></box-icon>
+              </button>
+            </div>
+            <Map />
+          </div>
+        </div>
+      )}
+      {/* แผนที่หลัก */}
       <div id="map">
         <Map />
       </div>

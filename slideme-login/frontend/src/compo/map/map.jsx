@@ -12,6 +12,7 @@ function Map() {
   const [originText, setOriginText] = useState('');
   const [destText, setDestText] = useState('');
   const [isApiLoaded, setIsApiLoaded] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const API_KEY = '1b4327452cc20e14a37e40cc130bd03a';
 
   // Load Longdo Map script + init
@@ -168,78 +169,93 @@ function Map() {
 
   return (
     <div className="map-container">
-      <div className="search-container">
-        <div className="selected-locations">
-          <div 
-            className={`location-item ${activeSearch === 'origin' ? 'active' : ''}`}
-            onClick={() => setActiveSearch('origin')}
-          >
-            <div className="location-header">
-              <span className="location-label">ต้นทาง</span>
-              {originMarker && activeSearch === 'origin' && (
-                <button className="confirm-button" onClick={confirmLocation}>
-                  ยืนยัน
-                </button>
-              )}
-            </div>
-            {activeSearch === 'origin' ? (
-              <input
-                type="text"
-                placeholder="ค้นหาต้นทาง..."
-                value={searchQuery}
-                onChange={handleInputChange}
-              />
-            ) : (
-              <span className="location-text">{originText || 'กดเพื่อค้นหาต้นทาง'}</span>
-            )}
-          </div>
+      {/* Control Button */}
+      <button 
+        className="map-control-button"
+        onClick={() => setIsSearchOpen(!isSearchOpen)}
+      >
+        <box-icon 
+          name={isSearchOpen ? "x" : "search"} 
+          color="#ffffff"
+        ></box-icon>
+        {isSearchOpen ? "ปิด" : "ค้นหาเส้นทาง"}
+      </button>
 
-          <div 
-            className={`location-item ${activeSearch === 'destination' ? 'active' : ''}`}
-            onClick={() => setActiveSearch('destination')}
-          >
-            <div className="location-header">
-              <span className="location-label">ปลายทาง</span>
-              {destMarker && activeSearch === 'destination' && (
-                <button className="confirm-button" onClick={confirmLocation}>
-                  ยืนยัน
-                </button>
-              )}
-            </div>
-            {activeSearch === 'destination' ? (
-              <input
-                type="text"
-                placeholder="ค้นหาปลายทาง..."
-                value={searchQuery}
-                onChange={handleInputChange}
-              />
-            ) : (
-              <span className="location-text">{destText || 'กดเพื่อค้นหาปลายทาง'}</span>
-            )}
-          </div>
-        </div>
-
-        {suggestions.length > 0 && (
-          <div className="suggestions">
-            {suggestions.map((place, index) => (
-              <div
-                key={index}
-                className="suggestion-item"
-                onClick={() => handleSuggestionClick(place)}
-              >
-                <div className="suggestion-title">{place.name}</div>
-                <div className="suggestion-address">{place.address}</div>
+      {/* Search Panel - show only when isSearchOpen is true */}
+      {isSearchOpen && (
+        <div className="search-panel">
+          <div className="selected-locations">
+            <div 
+              className={`location-item ${activeSearch === 'origin' ? 'active' : ''}`}
+              onClick={() => setActiveSearch('origin')}
+            >
+              <div className="location-header">
+                <span className="location-label">ต้นทาง</span>
+                {originMarker && activeSearch === 'origin' && (
+                  <button className="confirm-button" onClick={confirmLocation}>
+                    ยืนยัน
+                  </button>
+                )}
               </div>
-            ))}
-          </div>
-        )}
+              {activeSearch === 'origin' ? (
+                <input
+                  type="text"
+                  placeholder="ค้นหาต้นทาง..."
+                  value={searchQuery}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span className="location-text">{originText || 'กดเพื่อค้นหาต้นทาง'}</span>
+              )}
+            </div>
 
-        {originMarker && destMarker && (
-          <button className="route-button" onClick={showRoute}>
-            แสดงเส้นทาง
-          </button>
-        )}
-      </div>
+            <div 
+              className={`location-item ${activeSearch === 'destination' ? 'active' : ''}`}
+              onClick={() => setActiveSearch('destination')}
+            >
+              <div className="location-header">
+                <span className="location-label">ปลายทาง</span>
+                {destMarker && activeSearch === 'destination' && (
+                  <button className="confirm-button" onClick={confirmLocation}>
+                    ยืนยัน
+                  </button>
+                )}
+              </div>
+              {activeSearch === 'destination' ? (
+                <input
+                  type="text"
+                  placeholder="ค้นหาปลายทาง..."
+                  value={searchQuery}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span className="location-text">{destText || 'กดเพื่อค้นหาปลายทาง'}</span>
+              )}
+            </div>
+          </div>
+
+          {suggestions.length > 0 && (
+            <div className="suggestions">
+              {suggestions.map((place, index) => (
+                <div
+                  key={index}
+                  className="suggestion-item"
+                  onClick={() => handleSuggestionClick(place)}
+                >
+                  <div className="suggestion-title">{place.name}</div>
+                  <div className="suggestion-address">{place.address}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {originMarker && destMarker && (
+            <button className="route-button" onClick={showRoute}>
+              แสดงเส้นทาง
+            </button>
+          )}
+        </div>
+      )}
 
       <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
     </div>

@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { router: chatRouter, wss } = require('./routes/Chat');
 const app = express();
 
 // Enable CORS
@@ -11,6 +12,11 @@ app.use(express.json());
 // Routes
 const mapSelectionRouter = require('./routes/MapSelection');
 app.use('/api/map', mapSelectionRouter);
+
+const orderRouter = require('./routes/Order');
+app.use('/api/orders', orderRouter);
+
+app.use('/api/chat', chatRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -24,8 +30,15 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+// Handle WebSocket upgrade
+server.on('upgrade', (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit('connection', ws, request);
+  });
 });
 
 module.exports = app;

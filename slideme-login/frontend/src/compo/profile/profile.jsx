@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import './profile.css';
 
 const Profile = () => {
@@ -16,10 +16,7 @@ const Profile = () => {
     profileImage: null
   });
 
-  const [orderHistory] = useState([
-    { id: '1', date: '2024-03-29', status: 'Delivered', total: '฿250' },
-    { id: '2', date: '2024-03-28', status: 'In Transit', total: '฿180' },
-  ]);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -133,13 +130,28 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    // Clear local storage
+    localStorage.removeItem('user');
+    // Navigate to start page
+    const container = document.querySelector('.profile-container-PRF');
+    container.classList.add('slide-out');
+    setTimeout(() => {
+      navigate('/');
+    }, 300);
+  };
+
   return (
     <div className="profile-container-PRF">
         <motion.div 
             className="profile-header-PRF"
-            initial={{ opacity: 0, y: -100 }}
+            initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.3 }}
         >
             <div className="profile-image-container-PRF">
               <img 
@@ -162,9 +174,9 @@ const Profile = () => {
 
         <motion.div 
             className="profile-content-PRF"
-            initial={{ opacity: 0, y: 100 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.3 }}
         >
             <div className="profile-wrapper-PRF">
               <section className="profile-section-PRF">
@@ -266,32 +278,49 @@ const Profile = () => {
                 )}
               </section>
 
-              <section className="profile-section-PRF">
-                <h2 className="section-title-PRF">Recent Orders</h2>
-                <div className="orders-list-PRF">
-                  {orderHistory.map(order => (
-                    <div key={order.id} className="order-item-PRF">
-                      <div className="order-header-PRF">
-                        <span className="order-id-PRF">Order #{order.id}</span>
-                        <span className="order-status-PRF">{order.status}</span>
-                      </div>
-                      <div className="order-details-PRF">
-                        <span className="order-date-PRF">{order.date}</span>
-                        <span className="order-total-PRF">{order.total}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
               <button 
-                onClick={() => navigate('/')} 
+                onClick={handleLogout} 
                 className="logout-button-PRF"
               >
-                Logout
+                ออกจากระบบ
               </button>
             </div>
         </motion.div>
+
+        <AnimatePresence>
+          {showLogoutModal && (
+            <motion.div 
+              className="logout-modal"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div 
+                className="logout-modal-content"
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.8 }}
+              >
+                <h3>ยืนยันการออกจากระบบ</h3>
+                <p>คุณต้องการออกจากระบบใช่หรือไม่?</p>
+                <div className="logout-modal-buttons">
+                  <button 
+                    className="logout-modal-button logout-cancel"
+                    onClick={() => setShowLogoutModal(false)}
+                  >
+                    ยกเลิก
+                  </button>
+                  <button 
+                    className="logout-modal-button logout-confirm"
+                    onClick={confirmLogout}
+                  >
+                    ยืนยัน
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
     </div>
   );
 };

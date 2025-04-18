@@ -18,7 +18,7 @@ function Start() {
         <button
           className="btn"
           style={{ marginBottom: "10px" }}
-          onClick={() => navigate("/main")}
+          onClick={() => navigate("/login")}
         >
           <b>เข้าสู่ระบบ</b>
         </button>
