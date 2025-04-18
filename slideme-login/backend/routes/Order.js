@@ -1,4 +1,5 @@
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 
 // Mock data - replace with database queries later
@@ -58,4 +59,4 @@ router.put('/:id/status', (req, res) => {
   res.json(order);
 });
 
-module.exports = router;
+export default router;

@@ -1,9 +1,14 @@
-const express = require("express");
-const cors = require("cors");
-const { router: chatRouter, wss } = require("./routes/Chat");
+import express from "express";
+import cors from "cors";
+import { router as chatRouter, wss } from "./routes/Chat.js";
+import { pool } from "./db.js"; // Import db.js, assuming you are using it in some way
+import mapSelectionRouter from "./routes/MapSelection.js";
+import orderRouter from "./routes/Order.js";
+import registerPersonalRouter from "./routes/RegisterPersonal.js";
+import registerVehicleRouter from "./routes/RegisterVehicle.js";
+
 const app = express();
 
-require("./db.js");
 // Enable CORS
 app.use(cors());
 
@@ -11,15 +16,12 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-const mapSelectionRouter = require("./routes/MapSelection");
 app.use("/api/map", mapSelectionRouter);
-
-const orderRouter = require("./routes/Order");
 app.use("/api/orders", orderRouter);
-
 app.use("/api/chat", chatRouter);
+app.use("/api/drivers", registerPersonalRouter);
+app.use("/api/vehicles", registerVehicleRouter);
 
-app.use("/api/drivers", require("./routes/RegisterPersonal"));
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -43,4 +45,4 @@ server.on("upgrade", (request, socket, head) => {
   });
 });
 
-module.exports = app;
+export default app; // Export app to be used for testing or other purposes

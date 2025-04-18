@@ -1,5 +1,5 @@
-const express = require("express");
-const { pool } = require("../db"); // ดึง pool จาก db.js ที่ต้องใช้ CommonJS ด้วยกัน
+import express from "express";
+import { pool } from "../db.js"; // Use ESM import for pool
 
 const router = express.Router();
 
@@ -95,4 +95,4 @@ router.post("/register-personal", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router; // Use export default for ESM

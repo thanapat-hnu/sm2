@@ -1,5 +1,5 @@
-const mysql = require("mysql2/promise");
-const dotenv = require("dotenv");
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -27,5 +27,5 @@ pool.getConnection()
     });
   });
 
-// ส่งออก pool ไปใช้ที่อื่นได้ด้วย
-module.exports = { pool };
+// Export the pool to be used in other modules
+export { pool };

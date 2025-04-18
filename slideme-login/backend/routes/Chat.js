@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { WebSocketServer } from 'ws'; // Import WebSocketServer explicitly
+
 const router = express.Router();
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ noServer: true });
+const wss = new WebSocketServer({ noServer: true }); // Use WebSocketServer
 
 // Mock data for testing
 const mockCustomers = [
@@ -106,4 +107,4 @@ router.get('/history/:customerId', (req, res) => {
   res.json(history);
 });
 
-module.exports = { router, wss };
+export { router, wss };

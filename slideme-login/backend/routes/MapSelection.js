@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import axios from 'axios';
+
 const router = express.Router();
-const axios = require('axios');
 
 const API_KEY = '1b4327452cc20e14a37e40cc130bd03a';
 
@@ -27,4 +28,4 @@ router.get('/search', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

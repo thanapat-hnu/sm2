@@ -1,5 +1,5 @@
-import express from "express";
-import { pool } from "../db.js";
+import express from 'express';
+import { pool } from '../db.js'; // Use ESM import for pool
 
 const router = express.Router();
 
@@ -73,4 +73,4 @@ router.post("/register-vehicle", async (req, res) => {
     }
 });
 
-export default router;
+export default router; // Export router using ESM syntax
