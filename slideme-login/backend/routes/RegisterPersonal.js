@@ -1,5 +1,5 @@
-import express from "express";
-import { pool } from "../db.js";
+const express = require("express");
+const { pool } = require("../db"); // ดึง pool จาก db.js ที่ต้องใช้ CommonJS ด้วยกัน
 
 const router = express.Router();
 
@@ -82,7 +82,6 @@ router.post("/register-personal", async (req, res) => {
       ]
     );
 
-    // Respond with success message and personalId
     return res.status(201).json({
       message: "บันทึกข้อมูลส่วนตัวสำเร็จ",
       personalId: result.insertId,
@@ -96,4 +95,4 @@ router.post("/register-personal", async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

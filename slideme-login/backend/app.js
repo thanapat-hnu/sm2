@@ -1,8 +1,9 @@
-const express = require('express');
-const cors = require('cors');
-const { router: chatRouter, wss } = require('./routes/Chat');
+const express = require("express");
+const cors = require("cors");
+const { router: chatRouter, wss } = require("./routes/Chat");
 const app = express();
 
+require("./db.js");
 // Enable CORS
 app.use(cors());
 
@@ -10,23 +11,24 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-const mapSelectionRouter = require('./routes/MapSelection');
-app.use('/api/map', mapSelectionRouter);
+const mapSelectionRouter = require("./routes/MapSelection");
+app.use("/api/map", mapSelectionRouter);
 
-const orderRouter = require('./routes/Order');
-app.use('/api/orders', orderRouter);
+const orderRouter = require("./routes/Order");
+app.use("/api/orders", orderRouter);
 
-app.use('/api/chat', chatRouter);
+app.use("/api/chat", chatRouter);
 
+app.use("/api/drivers", require("./routes/RegisterPersonal"));
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
+  res.status(500).json({ error: "Something went wrong!" });
 });
 
 // Handle 404
 app.use((req, res) => {
-  res.status(404).json({ error: 'Not Found' });
+  res.status(404).json({ error: "Not Found" });
 });
 
 const PORT = process.env.PORT || 3000;
@@ -35,9 +37,9 @@ const server = app.listen(PORT, () => {
 });
 
 // Handle WebSocket upgrade
-server.on('upgrade', (request, socket, head) => {
+server.on("upgrade", (request, socket, head) => {
   wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit('connection', ws, request);
+    wss.emit("connection", ws, request);
   });
 });
 
