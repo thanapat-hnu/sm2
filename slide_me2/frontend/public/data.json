@@ -62,5 +62,10 @@
     },
     "towTruckType": "Wheel-Lift",
     "price": 1400
+  },
+  {
+    "providerName": "Test User",
+    "lastMessage": "Welcome to chat",
+    "time": "12:00"
   }
 ]
