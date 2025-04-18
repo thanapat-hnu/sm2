@@ -25,8 +25,7 @@ function Confirm({
 }) {
   const [showCancelPopup, setShowCancelPopup] = useState(false);
 
-  const isButtonVisible =
-    button === 'a' || button === 'b' || (showService && service);
+  const isButtonVisible = button === 'a' || button === 'b' || (showService && service);
 
   const isDataValid =
     readLocal.lat !== 0 &&
@@ -39,23 +38,32 @@ function Confirm({
   const shouldDisplay = isButtonVisible || isDataValid;
 
   const handleConfirm = () => {
-    if (button === 'a') {
-      setReadLocal(local);
-      console.log('✅ ตำแหน่งต้นทาง:', local);
-      setButton('');
-    } else if (button === 'b') {
-      setReadLocal2(local);
-      console.log('✅ ตำแหน่งปลายทาง:', local);
-      setButton('');
-    } else if (showService) {
-      setShowService(false);
+    const map = window.__longdoMapInstance;
+    if (!map) {
+      console.warn('❗ ไม่พบ longdo map instance');
+      return;
     }
+
+    const center = map.location(); // ✅ ดึงพิกัดจากหมุดกลาง
+    const selected = { lat: center.lat, lng: center.lon };
+    console.log('📌 พิกัดหมุดกลางจอ:', selected);
+
+    if (button === 'a') {
+      setReadLocal(selected);
+      console.log('✅ ยืนยันต้นทาง:', selected);
+    } else if (button === 'b') {
+      setReadLocal2(selected);
+      console.log('✅ ยืนยันปลายทาง:', selected);
+    }
+
+    setButton('');
 
     if (isDataValid && !showService && button !== 'a' && button !== 'b') {
       setButtonText('...');
     }
 
     if (buttonText === '...') {
+      console.log('🔍 ค้นหาผู้ให้บริการ...');
       setShowMarker(true);
     }
   };
@@ -69,7 +77,6 @@ function Confirm({
 
   return (
     <div className="container-button">
-      {/* ปุ่มยืนยัน */}
       <button
         className="button-d"
         onClick={handleConfirm}
@@ -80,7 +87,6 @@ function Confirm({
           : 'ยืนยัน'}
       </button>
 
-      {/* ปุ่มแสดงป๊อปอัพ "ยกเลิก" */}
       <button
         className="button-e"
         onClick={() => setShowCancelPopup(!showCancelPopup)}
@@ -93,7 +99,6 @@ function Confirm({
         <i className="bi bi-exclamation-circle"></i>
       </button>
 
-      {/* ป๊อปอัพยืนยันการยกเลิก */}
       <div
         className="container-i"
         style={{ display: showCancelPopup ? 'flex' : 'none' }}
