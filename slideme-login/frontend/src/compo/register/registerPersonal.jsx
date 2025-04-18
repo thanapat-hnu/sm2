@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { RegistrationContext } from "../../context/RegistrationContext";
 import { useState } from "react";
+import PageTransition from "../../components/PageTransition";
 
 function Register() {
   const navigate = useNavigate();
@@ -93,121 +94,123 @@ function Register() {
   };
 
   return (
-    <div className="container-login">
-      <div className="formReg">
-        <div className="header-container">
-          <button className="btn-back" onClick={handleBack}>
-            <b>＜ กลับ</b>
-          </button>
-          <h1>สมัครสมาชิก</h1>
+    <PageTransition>
+      <div className="container-login">
+        <div className="formReg">
+          <div className="header-container">
+            <button className="btn-back" onClick={handleBack}>
+              <b>＜ กลับ</b>
+            </button>
+            <h1>สมัครสมาชิก</h1>
+          </div>
+          
+          <div className="coolinput">
+            <label className="text">ชื่อจริง: </label>
+            <input
+              type="text"
+              name="firstName"
+              placeholder="ชื่อจริง..."
+              className={`input ${errors.firstName ? 'error' : ''}`}
+              value={personalData.firstName}
+              onChange={handleInputChange}
+            />
+            {errors.firstName && <span className="error-message">{errors.firstName}</span>}
+          </div>
+
+          <div className="coolinput">
+            <label className="text">นามสกุล: </label>
+            <input
+              type="text"
+              name="lastName"
+              placeholder="นามสกุล..."
+              className={`input ${errors.lastName ? 'error' : ''}`}
+              value={personalData.lastName}
+              onChange={handleInputChange}
+            />
+            {errors.lastName && <span className="error-message">{errors.lastName}</span>}
+          </div>
+
+          <div className="coolinput">
+            <label className="text">เลขบัตรประชาชน: </label>
+            <input
+              type="text"
+              name="idCardNumber"
+              placeholder="เลขบัตรประชาชน..."
+              className={`input ${errors.idCardNumber ? 'error' : ''}`}
+              value={personalData.idCardNumber}
+              onChange={handleInputChange}
+            />
+            {errors.idCardNumber && <span className="error-message">{errors.idCardNumber}</span>}
+          </div>
+
+          <div className="coolinput">
+            <label className="text">วันเดือนปีเกิด: </label>
+            <input
+              type="date"
+              name="birthDate"
+              className={`input ${errors.birthDate ? 'error' : ''}`}
+              value={personalData.birthDate}
+              onChange={handleInputChange}
+            />
+            {errors.birthDate && <span className="error-message">{errors.birthDate}</span>}
+          </div>
+
+          <div className="coolinput">
+            <label className="text">เบอร์โทรศัพท์: </label>
+            <input
+              type="tel"
+              name="phoneNumber"
+              placeholder="เบอร์โทรศัพท์..."
+              className={`input ${errors.phoneNumber ? 'error' : ''}`}
+              value={personalData.phoneNumber}
+              onChange={handleInputChange}
+            />
+            {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
+          </div>
+
+          <div className="coolinput">
+            <label className="text">อีเมล: </label>
+            <input
+              type="email"
+              name="email"
+              placeholder="อีเมล..."
+              className={`input ${errors.email ? 'error' : ''}`}
+              value={personalData.email}
+              onChange={handleInputChange}
+            />
+            {errors.email && <span className="error-message">{errors.email}</span>}
+          </div>
+
+          <div className="coolinput">
+            <label className="text">ที่อยู่ปัจจุบัน: </label>
+            <textarea
+              name="address"
+              placeholder="ที่อยู่..."
+              className={`input ${errors.address ? 'error' : ''}`}
+              value={personalData.address}
+              onChange={handleInputChange}
+            />
+            {errors.address && <span className="error-message">{errors.address}</span>}
+          </div>
+
+          <div className="coolinput">
+            <label className="text">รูปถ่ายหน้าตรงพร้อมบัตรประชาชน: </label>
+            <input
+              type="file"
+              name="idCardImage"
+              accept="image/*"
+              className={`input ${errors.idCardImage ? 'error' : ''}`}
+              onChange={handleFileUpload}
+            />
+            {errors.idCardImage && <span className="error-message">{errors.idCardImage}</span>}
+          </div>
         </div>
         
-        <div className="coolinput">
-          <label className="text">ชื่อจริง: </label>
-          <input
-            type="text"
-            name="firstName"
-            placeholder="ชื่อจริง..."
-            className={`input ${errors.firstName ? 'error' : ''}`}
-            value={personalData.firstName}
-            onChange={handleInputChange}
-          />
-          {errors.firstName && <span className="error-message">{errors.firstName}</span>}
-        </div>
-
-        <div className="coolinput">
-          <label className="text">นามสกุล: </label>
-          <input
-            type="text"
-            name="lastName"
-            placeholder="นามสกุล..."
-            className={`input ${errors.lastName ? 'error' : ''}`}
-            value={personalData.lastName}
-            onChange={handleInputChange}
-          />
-          {errors.lastName && <span className="error-message">{errors.lastName}</span>}
-        </div>
-
-        <div className="coolinput">
-          <label className="text">เลขบัตรประชาชน: </label>
-          <input
-            type="text"
-            name="idCardNumber"
-            placeholder="เลขบัตรประชาชน..."
-            className={`input ${errors.idCardNumber ? 'error' : ''}`}
-            value={personalData.idCardNumber}
-            onChange={handleInputChange}
-          />
-          {errors.idCardNumber && <span className="error-message">{errors.idCardNumber}</span>}
-        </div>
-
-        <div className="coolinput">
-          <label className="text">วันเดือนปีเกิด: </label>
-          <input
-            type="date"
-            name="birthDate"
-            className={`input ${errors.birthDate ? 'error' : ''}`}
-            value={personalData.birthDate}
-            onChange={handleInputChange}
-          />
-          {errors.birthDate && <span className="error-message">{errors.birthDate}</span>}
-        </div>
-
-        <div className="coolinput">
-          <label className="text">เบอร์โทรศัพท์: </label>
-          <input
-            type="tel"
-            name="phoneNumber"
-            placeholder="เบอร์โทรศัพท์..."
-            className={`input ${errors.phoneNumber ? 'error' : ''}`}
-            value={personalData.phoneNumber}
-            onChange={handleInputChange}
-          />
-          {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
-        </div>
-
-        <div className="coolinput">
-          <label className="text">อีเมล: </label>
-          <input
-            type="email"
-            name="email"
-            placeholder="อีเมล..."
-            className={`input ${errors.email ? 'error' : ''}`}
-            value={personalData.email}
-            onChange={handleInputChange}
-          />
-          {errors.email && <span className="error-message">{errors.email}</span>}
-        </div>
-
-        <div className="coolinput">
-          <label className="text">ที่อยู่ปัจจุบัน: </label>
-          <textarea
-            name="address"
-            placeholder="ที่อยู่..."
-            className={`input ${errors.address ? 'error' : ''}`}
-            value={personalData.address}
-            onChange={handleInputChange}
-          />
-          {errors.address && <span className="error-message">{errors.address}</span>}
-        </div>
-
-        <div className="coolinput">
-          <label className="text">รูปถ่ายหน้าตรงพร้อมบัตรประชาชน: </label>
-          <input
-            type="file"
-            name="idCardImage"
-            accept="image/*"
-            className={`input ${errors.idCardImage ? 'error' : ''}`}
-            onChange={handleFileUpload}
-          />
-          {errors.idCardImage && <span className="error-message">{errors.idCardImage}</span>}
-        </div>
+        <button className="btn-login" onClick={handleNext} style={{ marginBottom: "10px" }}>
+          <b>ถัดไป</b>
+        </button>
       </div>
-      
-      <button className="btn-login" onClick={handleNext} style={{ marginBottom: "10px" }}>
-        <b>ถัดไป</b>
-      </button>
-    </div>
+    </PageTransition>
   );
 }
 

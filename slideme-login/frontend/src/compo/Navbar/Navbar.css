@@ -8,7 +8,7 @@
   justify-content: space-around;
   align-items: center;
   padding: 12px 0;
-  z-index: 1000;
+  z-index: 1001; /* เพิ่ม z-index ให้สูงกว่า animation */
 }
 
 .nav-item {

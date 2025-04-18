@@ -3,9 +3,45 @@ const router = express.Router();
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ noServer: true });
 
+// Mock data for testing
+const mockCustomers = [
+  { 
+    id: 1, 
+    name: 'คุณสมชาย', 
+    lastMessage: 'สวัสดีครับ ผมต้องการความช่วยเหลือ', 
+    unread: 2,
+    status: 'online',
+    timestamp: new Date()
+  },
+  { 
+    id: 2, 
+    name: 'คุณสมหญิง', 
+    lastMessage: 'รบกวนช่วยรับของด้วยค่ะ', 
+    unread: 0,
+    status: 'offline',
+    timestamp: new Date()
+  }
+];
+
+const mockChatHistory = {
+  1: [
+    {
+      sender: 'customer',
+      content: 'สวัสดีครับ ผมต้องการความช่วยเหลือ',
+      timestamp: new Date()
+    }
+  ],
+  2: [
+    {
+      sender: 'customer',
+      content: 'รบกวนช่วยรับของด้วยค่ะ',
+      timestamp: new Date()
+    }
+  ]
+};
+
 // Store active connections
 const clients = new Map();
-const chatHistory = new Map();
 
 // Handle WebSocket connection
 wss.on('connection', (ws, customerId) => {
@@ -13,10 +49,10 @@ wss.on('connection', (ws, customerId) => {
   clients.set(customerId, ws);
 
   // Send chat history to client when connected
-  if (chatHistory.has(customerId)) {
+  if (mockChatHistory[customerId]) {
     ws.send(JSON.stringify({
       type: 'history',
-      messages: chatHistory.get(customerId)
+      messages: mockChatHistory[customerId]
     }));
   }
 
@@ -24,10 +60,10 @@ wss.on('connection', (ws, customerId) => {
     const data = JSON.parse(message);
     
     // Store message in history
-    if (!chatHistory.has(data.customerId)) {
-      chatHistory.set(data.customerId, []);
+    if (!mockChatHistory[data.customerId]) {
+      mockChatHistory[data.customerId] = [];
     }
-    chatHistory.get(data.customerId).push({
+    mockChatHistory[data.customerId].push({
       sender: data.sender,
       content: data.content,
       timestamp: new Date()
@@ -52,28 +88,22 @@ wss.on('connection', (ws, customerId) => {
   });
 });
 
-// REST endpoints for chat management
-router.get('/customers', async (req, res) => {
-  try {
-    // Mock data - replace with database query
-    const customers = [
-      { id: 1, name: 'คุณสมชาย', lastMessage: 'สวัสดีครับ', unread: 2 },
-      { id: 2, name: 'คุณสมหญิง', lastMessage: 'รบกวนด้วยค่ะ', unread: 0 },
-    ];
-    res.json(customers);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch customers' });
-  }
+// API endpoints
+router.get('/customers', (req, res) => {
+  res.json(mockCustomers);
 });
 
-router.get('/history/:customerId', async (req, res) => {
-  try {
-    const { customerId } = req.params;
-    const history = chatHistory.get(parseInt(customerId)) || [];
-    res.json(history);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch chat history' });
+router.get('/customers/:customerId', (req, res) => {
+  const customer = mockCustomers.find(c => c.id === parseInt(req.params.customerId));
+  if (!customer) {
+    return res.status(404).json({ error: 'Customer not found' });
   }
+  res.json(customer);
+});
+
+router.get('/history/:customerId', (req, res) => {
+  const history = mockChatHistory[req.params.customerId] || [];
+  res.json(history);
 });
 
 module.exports = { router, wss };
