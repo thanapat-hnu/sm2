@@ -4,208 +4,166 @@ import "./local.css";
 import axios from "axios";
 
 function Locat({
-    button,
-    setButton,
-    readLocal,
-    readLocalB,
-    options,
-    service,
-    setService,
-    showData,
-    setShowData,
-    getData,
-    setGetData,
-    formatDate,
-    showService,
-    setShowService,
-    buttonText,
-    showMenu,
-    setShowMenu,
-
+  button,
+  setButton,
+  readLocal,
+  readLocalB,
+  setReadLocal,
+  setReadLocalB,
+  options,
+  service,
+  setService,
+  showData,
+  setShowData,
+  getData,
+  setGetData,
+  formatDate,
+  showService,
+  setShowService,
+  buttonText,
+  showMenu,
+  setShowMenu,
+  setLocal
 }) {
-    const [locationDetails, setLocationDetails] = useState({
-        name: "ตำแหน่งต้นทาง",
-        road: "",
-        soi: "",
-    });
-    const [locationDetailsB, setLocationDetailsB] = useState({
-        name: "ตำแหน่งปลายทาง",
-        road: "",
-        soi: "",
-    });
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLoadingB, setIsLoadingB] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [placeNameA, setPlaceNameA] = useState("ตำแหน่งต้นทาง");
+  const [placeNameB, setPlaceNameB] = useState("ตำแหน่งปลายทาง");
 
+  const handleSearch = async (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    if (value.length < 3) return setSearchResults([]);
 
-    // ฟังก์ชันดึงข้อมูลตำแหน่ง
-    const getLocationDetails = async (lat, lng) => {
-        try {
-            if (isNaN(lat) || isNaN(lng)) {
-                return {
-                    name: "พิกัดไม่ถูกต้อง",
-                    road: "พิกัดไม่ถูกต้อง",
-                    soi: "พิกัดไม่ถูกต้อง",
-                };
-            }
+    try {
+      const res = await axios.get("https://search.longdo.com/mapsearch/json/search", {
+        params: {
+          key: "1b4327452cc20e14a37e40cc130bd03a",
+          keyword: value,
+        },
+      });
 
-            const response = await axios.get("https://nominatim.openstreetmap.org/reverse", {
-                params: {
-                    format: "json",
-                    lat: lat,
-                    lon: lng,
-                    "accept-language": "th", // ขอข้อมูลภาษาไทย
-                },
-            });
+      const results = res.data.data.map((item) => ({
+        name: item.name,
+        lat: item.lat,
+        lon: item.lon,
+      }));
 
-            const address = response.data.address || {};
-            return {
-                name: address.neighbourhood || address.suburb || address.city || "ไม่ทราบพื้นที่",
-                road: address.road || "ไม่ทราบถนน",
-                soi: address.suburb || address.neighbourhood || "ไม่ทราบซอย",
-            };
-        } catch (error) {
-            console.error("Error fetching location:", error);
-            return {
-                name: "ไม่สามารถดึงข้อมูลได้",
-                road: "ไม่ทราบถนน",
-                soi: "ไม่ทราบซอย",
-            };
-        }
-    };
+      setSearchResults(results);
+    } catch (err) {
+      console.error("❌ Search error:", err);
+    }
+  };
 
-    // โหลดข้อมูลตำแหน่งต้นทางเมื่อ readLocal เปลี่ยนแปลง
-    useEffect(() => {
-        const fetchData = async () => {
-            if (readLocal.lat !== 0 && readLocal.lng !== 0) {
-                setIsLoading(true);
-                const details = await getLocationDetails(readLocal.lat, readLocal.lng);
-                setLocationDetails(details);
-                setIsLoading(false);
-            }
-        };
+  const handleSelectPlace = (place) => {
+    const newLoc = { lat: parseFloat(place.lat), lng: parseFloat(place.lon) };
+    setSearchQuery("");
+    setSearchResults([]);
+    setLocal(newLoc); // วาร์ปไป
+    if (button === "a") {
+      setPlaceNameA(place.name);
+    } else if (button === "b") {
+      setPlaceNameB(place.name);
+    }
+  };
 
-        fetchData();
-    }, [readLocal.lat, readLocal.lng]);
+  return (
+    <div
+      className="container-locat"
+      style={showMenu ? { display: "grid" } : { display: "none" }}
+    >
 
-    // โหลดข้อมูลตำแหน่งปลายทางเมื่อ readLocalB เปลี่ยนแปลง
-    useEffect(() => {
-        const fetchData = async () => {
-            if (readLocalB.lat !== 0 && readLocalB.lng !== 0) {
-                setIsLoadingB(true);
-                const details = await getLocationDetails(readLocalB.lat, readLocalB.lng);
-                setLocationDetailsB(details);
-                setIsLoadingB(false);
-            }
-        };
-
-        fetchData();
-    }, [readLocalB.lat, readLocalB.lng]);
-
-    const [showDev, setShowDev] = useState(true);
-
-
-    return (
-        <div
-            style={showMenu ? { display: "grid" } : { display: "none" }}
-            className="container-locat"
-        >
-            {/* ตำแหน่งต้นทาง */}
-            <button
-                onClick={() => {
-                    setButton(button === "a" ? "" : "a")
-                }}
-                className="button"
-                style={
-                    button === "a"
-                        ? { border: "1px solid #14BF61" }
-                        : { border: "none" }
-                }
-                disabled={buttonText === "..."}
-            >
-                <div className="bg-i bg-red">
-                    <i className="bi bi-geo-alt-fill red"></i>
-                </div>
-                <h4 className="h4">
-                    {readLocal.lat === 0 && readLocal.lng === 0
-                        ? "ตำแหน่งต้นทาง"
-                        : isLoading
-                            ? "กำลังโหลดข้อมูล..."
-                            : `${locationDetails.name}, ถนน: ${locationDetails.road}`}
-                </h4>
-            </button>
-
-            {/* ตำแหน่งปลายทาง */}
-            <button
-                onClick={() => {
-                    setButton(button === "b" ? "" : "b")
-                }}
-                className="button"
-                style={
-                    button === "b"
-                        ? { border: "1px solid #14BF61" }
-                        : { border: "none" }
-                }
-                disabled={buttonText === "..."}
-            >
-                <div className="bg-i bg-green">
-                    <i className="bi bi-geo-alt-fill green"></i>
-                </div>
-                <h4 className="h4">
-                    {readLocalB.lat === 0 && readLocalB.lng === 0
-                        ? "ตำแหน่งปลายทาง"
-                        : isLoadingB
-                            ? "กำลังโหลดข้อมูล..."
-                            : `${locationDetailsB.name}, ถนน: ${locationDetailsB.road}`}
-                </h4>
-            </button>
-
-            {/* ประเภทรถ */}
-            <div className="sub-container-box">
-                <button
-                    className="button-b"
-                    onClick={() => setButton(button === "c" ? "" : "c")}
-                    disabled={buttonText === "..."}
-                >
-                    <div className="bg-i bg-green">
-                        <i className="bi bi-car-front-fill green"></i>
-                    </div>
-                    <h4 className="h4">{options === "" ? "เลือกประเภทรถ" : options}</h4>
-                </button>
-
-                {/* เวลาที่ให้บริการ */}
-                <button
-                    className="button-c"
-                    onClick={() => {
-                        if (service === true) {
-                            setService(!service);
-                        } else {
-                            setShowService(!showService);
-                            setService(!service);
-                        }
-                    }}
-                    disabled={buttonText === "..."}
-                >
-                    {service ? formatDate(showData) : "ตอนนี้"}
-                    <i className="bi bi-chevron-compact-down"></i>
-                </button>
-            </div>
-
-           
-
-            {/* ปฏิทิน */}
-            <div>
-                <Calendars
-                    service={service}
-                    setService={setService}
-                    showData={showData}
-                    setShowData={setShowData}
-                    formatDate={formatDate}
-                    showService={showService}
-                    setShowService={setShowService}
-                />
-            </div>
+      {/* 🔴 ปุ่มต้นทาง */}
+      <button
+        className="button"
+        onClick={() => setButton(button === "a" ? "" : "a")}
+        style={button === "a" ? { border: "1px solid #14BF61" } : {}}
+        disabled={buttonText === "..."}
+      >
+        <div className="bg-i bg-red">
+          <i className="bi bi-geo-alt-fill red"></i>
         </div>
-    );
+        <h4 className="h4">{placeNameA}</h4>
+      </button>
+
+      {/* 🟢 ปุ่มปลายทาง */}
+      <button
+        className="button"
+        onClick={() => setButton(button === "b" ? "" : "b")}
+        style={button === "b" ? { border: "1px solid #14BF61" } : {}}
+        disabled={buttonText === "..."}
+      >
+        <div className="bg-i bg-green">
+          <i className="bi bi-geo-alt-fill green"></i>
+        </div>
+        <h4 className="h4">{placeNameB}</h4>
+      </button>
+
+      {/* 🔍 ช่อง search แสดงเฉพาะเมื่อเลือก a หรือ b */}
+      {(button === "a" || button === "b") && (
+        <div className="search-box">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearch}
+            placeholder="ค้นหาสถานที่..."
+            className="search-input"
+          />
+          {searchResults.length > 0 && (
+            <ul className="search-dropdown">
+              {searchResults.map((place, index) => (
+                <li key={index} onClick={() => handleSelectPlace(place)}>
+                  {place.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {/* ✅ ประเภทรถ & เวลา เหมือนเดิม */}
+      <div className="sub-container-box">
+        <button
+          className="button-b"
+          onClick={() => setButton(button === "c" ? "" : "c")}
+          disabled={buttonText === "..."}
+        >
+          <div className="bg-i bg-green">
+            <i className="bi bi-car-front-fill green"></i>
+          </div>
+          <h4 className="h4">{options === "" ? "เลือกประเภทรถ" : options}</h4>
+        </button>
+
+        <button
+          className="button-c"
+          onClick={() => {
+            if (service) {
+              setService(false);
+            } else {
+              setShowService(!showService);
+              setService(true);
+            }
+          }}
+          disabled={buttonText === "..."}
+        >
+          {service ? formatDate(showData) : "ตอนนี้"}
+          <i className="bi bi-chevron-compact-down"></i>
+        </button>
+      </div>
+
+      <div>
+        <Calendars
+          service={service}
+          setService={setService}
+          showData={showData}
+          setShowData={setShowData}
+          formatDate={formatDate}
+          showService={showService}
+          setShowService={setShowService}
+        />
+      </div>
+    </div>
+  );
 }
 
 export default Locat;
