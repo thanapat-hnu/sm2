@@ -7,13 +7,24 @@ const Profile = () => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
-    username: '',  // เพิ่ม username เพื่อใช้ในการอ้างอิง
+    // ข้อมูลส่วนตัว
+    username: '',
     firstname: '',
     lastname: '',
     email: '',
     phone: '',
     gender: '',
-    profileImage: null
+    profileImage: null,
+    // เพิ่มข้อมูลยานพาหนะ
+    vehicleInfo: {
+      licenseType: '',
+      licenseNumber: '',
+      licenseExpiryDate: '',
+      vehicleType: '',
+      vehicleBrand: '',
+      vehicleModel: '',
+      plateNumber: '',
+    }
   });
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -30,7 +41,6 @@ const Profile = () => {
         const response = await fetch(`http://localhost:3000/drivers/select`);
         const data = await response.json();
         
-        // หาข้อมูล user ที่ตรงกับ username ที่ login
         const userData = data.find(driver => driver.username === user.username);
         
         if (userData) {
@@ -41,7 +51,16 @@ const Profile = () => {
             email: userData.email,
             phone: userData.phone,
             gender: userData.gender,
-            profileImage: null
+            profileImage: null,
+            vehicleInfo: {
+              licenseType: userData.licenseType,
+              licenseNumber: userData.licenseNumber,
+              licenseExpiryDate: userData.licenseExpiryDate,
+              vehicleType: userData.vehicleType,
+              vehicleBrand: userData.vehicleBrand,
+              vehicleModel: userData.vehicleModel,
+              plateNumber: userData.plateNumber,
+            }
           });
         }
       } catch (error) {
@@ -112,7 +131,8 @@ const Profile = () => {
           firstname: userData.firstname,
           lastname: userData.lastname,
           phone: userData.phone,
-          gender: userData.gender
+          gender: userData.gender,
+          vehicleInfo: userData.vehicleInfo
         })
       });
   
@@ -276,6 +296,59 @@ const Profile = () => {
                 ) : (
                   <button onClick={() => setIsEditing(true)} className="edit-button-PRF">Edit Profile</button>
                 )}
+              </section>
+
+              <section className="profile-section-PRF">
+                <h2 className="section-title-PRF">Vehicle Information</h2>
+                <div className="info-list-PRF">
+                  {/* ประเภทใบขับขี่ */}
+                  <div className="info-item-PRF">
+                    <span className="info-label-PRF">ประเภทใบขับขี่</span>
+                    <span className="info-value-PRF">
+                      {userData.vehicleInfo.licenseType === 'motorcycle' ? 'รถจักรยานยนต์' : 'รถยนต์'}
+                    </span>
+                  </div>
+
+                  {/* หมายเลขใบขับขี่ */}
+                  <div className="info-item-PRF">
+                    <span className="info-label-PRF">หมายเลขใบขับขี่</span>
+                    <span className="info-value-PRF">{userData.vehicleInfo.licenseNumber}</span>
+                  </div>
+
+                  {/* วันหมดอายุใบขับขี่ */}
+                  <div className="info-item-PRF">
+                    <span className="info-label-PRF">วันหมดอายุใบขับขี่</span>
+                    <span className="info-value-PRF">
+                      {new Date(userData.vehicleInfo.licenseExpiryDate).toLocaleDateString('th-TH')}
+                    </span>
+                  </div>
+
+                  {/* ประเภทพาหนะ */}
+                  <div className="info-item-PRF">
+                    <span className="info-label-PRF">ประเภทพาหนะ</span>
+                    <span className="info-value-PRF">
+                      {userData.vehicleInfo.vehicleType === 'motorcycle' ? 'รถจักรยานยนต์' : 'รถยนต์'}
+                    </span>
+                  </div>
+
+                  {/* ยี่ห้อรถ */}
+                  <div className="info-item-PRF">
+                    <span className="info-label-PRF">ยี่ห้อรถ</span>
+                    <span className="info-value-PRF">{userData.vehicleInfo.vehicleBrand}</span>
+                  </div>
+
+                  {/* รุ่นรถ */}
+                  <div className="info-item-PRF">
+                    <span className="info-label-PRF">รุ่นรถ</span>
+                    <span className="info-value-PRF">{userData.vehicleInfo.vehicleModel}</span>
+                  </div>
+
+                  {/* ทะเบียนรถ */}
+                  <div className="info-item-PRF">
+                    <span className="info-label-PRF">ทะเบียนรถ</span>
+                    <span className="info-value-PRF">{userData.vehicleInfo.plateNumber}</span>
+                  </div>
+                </div>
               </section>
 
               <button 

@@ -23,13 +23,30 @@ function ChatRoom() {
   const connectWebSocket = () => {
     const wsClient = new WebSocket(`ws://localhost:3000/chat/${customerId}`);
     
+    wsClient.onopen = () => {
+      console.log('WebSocket Connected');
+    };
+
     wsClient.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === 'message') {
-        setMessages(prev => [...prev, data.message]);
+        setMessages(prevMessages => [...prevMessages, data.message]);
+        scrollToBottom();
       } else if (data.type === 'history') {
         setMessages(data.messages);
+        scrollToBottom();
       }
+    };
+
+    wsClient.onerror = (error) => {
+      console.error('WebSocket Error:', error);
+    };
+
+    wsClient.onclose = () => {
+      console.log('WebSocket Disconnected');
+      setTimeout(() => {
+        connectWebSocket();
+      }, 3000);
     };
 
     setWs(wsClient);
@@ -56,23 +73,40 @@ function ChatRoom() {
     const message = {
       customerId,
       sender: 'driver',
-      content: newMessage
+      content: newMessage,
+      timestamp: new Date().toISOString()
     };
 
-    ws.send(JSON.stringify(message));
-    setNewMessage('');
-  };
-
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      const chatContainer = messagesEndRef.current.parentElement;
-      const inputHeight = document.querySelector('.chat-room-input').offsetHeight;
-      const navbarHeight = 60;
-      chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight + inputHeight + navbarHeight;
+    try {
+      ws.send(JSON.stringify(message));
+      setMessages(prevMessages => [...prevMessages, message]);
+      setNewMessage('');
+      scrollToBottom();
+    } catch (error) {
+      console.error('Error sending message:', error);
+      connectWebSocket();
     }
   };
 
-  useEffect(scrollToBottom, [messages]);
+  const scrollToBottom = () => {
+    requestAnimationFrame(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+  }, [ws]);
 
   if (!customer) return null;
 
@@ -97,7 +131,7 @@ function ChatRoom() {
         <div className="chat-room-messages">
           {messages.map((message, index) => (
             <div
-              key={index}
+              key={`${message.timestamp}-${index}`}
               className={`chat-message ${message.sender === 'driver' ? 'sent' : 'received'}`}
             >
               <div className="message-bubble">
@@ -117,8 +151,12 @@ function ChatRoom() {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="พิมพ์ข้อความ..."
+            disabled={!ws || ws.readyState !== WebSocket.OPEN}
           />
-          <button type="submit">
+          <button 
+            type="submit"
+            disabled={!ws || ws.readyState !== WebSocket.OPEN}
+          >
             <box-icon name='send' color="#fff"></box-icon>
           </button>
         </form>

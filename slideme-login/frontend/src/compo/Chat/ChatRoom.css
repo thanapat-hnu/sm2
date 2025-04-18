@@ -6,18 +6,18 @@
 }
 
 .chat-room-header {
-  padding: 16px;
+  padding: 12px;
   background: white;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   border-bottom: 1px solid #eee;
 }
 
 .back-button {
   background: none;
   border: none;
-  padding: 8px;
+  padding: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -30,10 +30,10 @@
 }
 
 .chat-room-avatar {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background: #14BF61;
-  border-radius: 20px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,8 +63,8 @@
 .chat-room-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
-  padding-bottom: 80px; /* Space for input */
+  padding: 12px;
+  padding-bottom: 60px; /* Space for input */
 }
 
 .chat-message {
@@ -78,8 +78,8 @@
 
 .message-bubble {
   max-width: 75%;
-  padding: 8px 12px;
-  border-radius: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
   background: white;
   box-shadow: 0 1px 2px rgba(0,0,0,0.1);
   font-size: 0.9rem;
@@ -106,7 +106,7 @@
   left: 0;
   right: 0;
   background: white;
-  padding: 12px;
+  padding: 8px;
   border-top: 1px solid #eee;
   display: flex;
   gap: 8px;
@@ -121,20 +121,20 @@
 
 .chat-room-input input {
   flex: 1;
-  height: 40px;
-  padding: 8px 16px;
+  height: 32px;
+  padding: 6px 12px;
   border: 1px solid #ddd;
-  border-radius: 20px;
+  border-radius: 16px;
   outline: none;
   font-size: 0.9rem;
 }
 
 .chat-room-input button {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background: #14BF61;
   border: none;
-  border-radius: 20px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
