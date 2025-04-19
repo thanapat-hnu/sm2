@@ -16,7 +16,8 @@ import RegisterDriverVehicle from './pages/Register/RegisterDriverVehicle';
 import Create from './pages/Create/Create';
 import List from './pages/list/list';
 import History from './pages/history/history';
-import Chat from './pages/chat/chat';
+import ChatList from './pages/chat/chatlist'; // ใช้ ChatList แทน Chat
+import ChatRoom from './pages/chat/chatroom';
 import Payment from './Payment/Payment';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -26,19 +27,15 @@ function App() {
     <div className='container-app'>
       <BrowserRouter basename="/slide_me2">
         <Routes>
-
           <Route path="/" element={<Navigate to="/login" />} />
 
-      
           <Route element={<Layout />}>
-            // <Route path="/home" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/list" element={<List />} />
             <Route path="/history" element={<History />} />
-            <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profileedit />} />
           </Route>
 
-      
           <Route path="/login" element={<Login />} />
           <Route path="/inputphone" element={<Inputphone />} />
           <Route path="/otp" element={<OTP />} />
@@ -47,8 +44,9 @@ function App() {
           <Route path="/register/driver/vehicle" element={<RegisterDriverVehicle />} />
           <Route path="/create" element={<Create />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/chatlist" element={<ChatList />} />
+          <Route path="/chatroom" element={<ChatRoom />} />
 
-     
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>

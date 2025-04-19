@@ -2,9 +2,6 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
+  base: '/slide_me2/', // ต้องตรงกับ basename ใน BrowserRouter
   plugins: [react()],
-  base: '/slide_me2/',
-  build: {
-    outDir: 'build' // เปลี่ยนโฟลเดอร์ output เป็น 'build'
-  }
 });
