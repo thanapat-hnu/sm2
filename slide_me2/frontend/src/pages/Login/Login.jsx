@@ -7,20 +7,26 @@ function Login() {
 
     // ฟังก์ชันเมื่อกดปุ่มเข้าสู่ระบบด้วยเบอร์มือถือ
     const handlePhoneLogin = () => {
-        // เริ่มอนิเมชั่น fade-out ก่อนเปลี่ยนหน้า
         document.querySelector('.Login-container').classList.add('fade-out');
         setTimeout(() => {
             navigate('/inputphone');
-        }, 500); // ดีเลย์เพื่อให้อนิเมชั่นทำงาน
+        }, 500);
     };
 
     // ฟังก์ชันเมื่อกดปุ่มสร้างบัญชีใหม่
     const handleRegister = () => {
-        // เริ่มอนิเมชั่น fade-out ก่อนเปลี่ยนหน้า
         document.querySelector('.Login-container').classList.add('fade-out');
         setTimeout(() => {
-            navigate('/register/customer'); // เปลี่ยนเส้นทางไปที่ RegisterCustomer
-        }, 500); // ดีเลย์เพื่อให้อนิเมชั่นทำงาน
+            navigate('/register/customer');
+        }, 500);
+    };
+
+    // ฟังก์ชันเมื่อกดปุ่ม "ร่วมงานกับเรา ?"
+    const handleJoinUs = () => {
+        document.querySelector('.Login-container').classList.add('fade-out');
+        setTimeout(() => {
+            navigate('/register/driver/personal'); // เปลี่ยนเส้นทางไปหน้า RegisterDriverPersonal
+        }, 500);
     };
 
     return (
@@ -35,6 +41,11 @@ function Login() {
             <div>
                 <button className="btn-register" onClick={handleRegister}>
                     สร้างบัญชีใหม่
+                </button>
+            </div>
+            <div className="join-us">
+                <button className="btn-join-us" onClick={handleJoinUs}>
+                    ร่วมงานกับเรา ?
                 </button>
             </div>
         </div>

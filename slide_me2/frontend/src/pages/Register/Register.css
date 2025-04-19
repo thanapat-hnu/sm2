@@ -2,6 +2,9 @@
     width: 390px;
     height: 844px;
     border: 1px solid black;
+    background-color: #f9f9f9;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .Register-title {
@@ -41,7 +44,6 @@
     animation: RegisterFadeOut 0.5s ease-in-out forwards;
 }
 
-
 .back-btn {
     width: 50px;
     height: 50px;
@@ -53,8 +55,10 @@
 }
 
 .Register-form {
-    margin-left: 20px;
-    margin-top: 90px;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     color: #585858;
 }
 
@@ -64,18 +68,21 @@
     color: #585858;
 }
 
-.Register-input {
-    border: none;
+.Register-input,
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     outline: none;
-    border-bottom: 2px solid #ccc;
-    font-size: 20px;
-    margin-left: 20px;
     color: #585858;
 }
 
 .Register-next {
     display: flex;
     justify-content: center;
+    margin-top: 20px;
 }
 
 .btn-next {
@@ -89,19 +96,23 @@
     font-weight: bold;
     border-radius: 35px;
     border: none;
-    margin-top: 500px;
     background-color: #14BF61;
     color: white;
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
+.btn-next:hover {
+    background-color: #12a357;
+    transform: translateY(-2px);
+}
+
 .btn-next:active {
-    background-color: #cccccc;
+    background-color: #0f8c4a;
     transform: scale(0.98);
 }
+
 .error-message {
     color: red; /* เปลี่ยนสีข้อความเป็นสีแดง */
     font-size: 14px; /* ขนาดตัวอักษรเล็กน้อย */
     margin-top: 10px; /* ระยะห่างจาก input */
-  }
-  
+}

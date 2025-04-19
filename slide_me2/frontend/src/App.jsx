@@ -26,19 +26,19 @@ function App() {
     <div className='container-app'>
       <BrowserRouter basename="/slide_me2">
         <Routes>
-          {/* redirect หน้าแรกไป login */}
+
           <Route path="/" element={<Navigate to="/login" />} />
 
-          {/* layout routes */}
+      
           <Route element={<Layout />}>
-            <Route path="/home" element={<Home />} />
+            // <Route path="/home" element={<Home />} />
             <Route path="/list" element={<List />} />
             <Route path="/history" element={<History />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profileedit />} />
           </Route>
 
-          {/* auth & register routes */}
+      
           <Route path="/login" element={<Login />} />
           <Route path="/inputphone" element={<Inputphone />} />
           <Route path="/otp" element={<OTP />} />
@@ -48,7 +48,7 @@ function App() {
           <Route path="/create" element={<Create />} />
           <Route path="/payment" element={<Payment />} />
 
-          {/* fallback route (optional) */}
+     
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>
