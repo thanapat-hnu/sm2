@@ -14,7 +14,7 @@ import Register from './pages/Register/Register';
 import Create from './pages/Create/Create';
 import List from './pages/list/list';
 import History from './pages/history/history';
-import Chat from './pages/Chat/Chat';
+import Chat from './pages/chat/chat'; // แก้จาก Chat.jsx เป็น chat.jsx
 import Payment from './Payment/Payment';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
