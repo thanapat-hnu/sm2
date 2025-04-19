@@ -30,22 +30,18 @@ const History = () => {
             .padStart(2, '0')}`; // รูปแบบ DD/MM/YYYY HH:MM
     };
 
-    // โหลดข้อมูลจากไฟล์ data.json
     useEffect(() => {
-        fetch('./data.json')
-            .then((response) => response.json())
-            .then((data) => {
-                // เพิ่มฟิลด์วันที่และเวลาสุ่มให้แต่ละรายการ
-                const updatedData = data.map((item) => ({
-                    ...item,
-                    randomDateTime: getRandomDateTime(),
-                    hasRated: false, // เพิ่มฟิลด์ hasRated เพื่อติดตามสถานะการให้คะแนน
-                }));
-                setHistoryData(updatedData);
-            })
-            .catch((error) => console.error('Error loading data:', error));
-    }, []);
-
+        fetch('http://localhost:3000/api/get-history')
+          .then((response) => response.json())
+          .then((result) => {
+            const updatedData = result.data.map((item) => ({
+              ...item,
+              hasRated: item.hasRated || false,
+            }));
+            setHistoryData(updatedData);
+          })
+          .catch((error) => console.error('Error loading history:', error));
+      }, []);
     const handleBackClick = () => {
         setShowSection(false); // ซ่อน section เมื่อกดปุ่ม
         setTimeout(() => {
@@ -80,7 +76,7 @@ const History = () => {
                 <FaArrowLeft />
             </button>
 
-            {historyData.slice(1, 4).map((item) => (
+            {historyData.map((item) => (
                 <section key={item.providerId} className={`latest-section ${showSection ? 'slide-in' : 'slide-out'}`}>
                     <div className="card">
                         <div className="card-row">
