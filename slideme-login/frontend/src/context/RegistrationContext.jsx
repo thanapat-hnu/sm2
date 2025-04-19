@@ -4,25 +4,25 @@ export const RegistrationContext = createContext();
 
 export function RegistrationProvider({ children }) {
   const [personalData, setPersonalData] = useState({
-    firstName: "",
-    lastName: "",
-    idCardNumber: "",
-    birthDate: "",
-    phoneNumber: "",
-    email: "",
-    address: "",
+    firstName: "A",
+    lastName: "B",
+    idCardNumber: "1234567890123",
+    birthDate: "1990-01-01",
+    phoneNumber: "0123456789",
+    email: "e@e.com",
+    address: "address",
     idCardImage: null
   });
 
   const [vehicleData, setVehicleData] = useState({
-    licenseType: "",
-    licenseNumber: "",
-    licenseExpiryDate: "",
+    licenseType: "Type A",
+    licenseNumber: "ABC123456",
+    licenseExpiryDate: "2026-12-31",
     licenseImage: null,
-    vehicleType: "",
-    vehicleBrand: "",
-    vehicleModel: "",
-    plateNumber: "",
+    vehicleType: "Car",
+    vehicleBrand: "Toyota",
+    vehicleModel: "Vios",
+    plateNumber: "1กก1234",
     vehicleImage: null,
     plateImage: null
   });

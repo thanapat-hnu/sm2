@@ -62,9 +62,9 @@ function Register() {
       newErrors.address = "กรุณากรอกที่อยู่";
     }
     
-    if (!personalData.idCardImage) {
-      newErrors.idCardImage = "กรุณาอัพโหลดรูปบัตรประชาชน";
-    }
+    // if (!personalData.idCardImage) {
+    //   newErrors.idCardImage = "กรุณาอัพโหลดรูปบัตรประชาชน";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

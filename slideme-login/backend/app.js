@@ -6,6 +6,7 @@ import mapSelectionRouter from "./routes/MapSelection.js";
 import orderRouter from "./routes/Order.js";
 import registerPersonalRouter from "./routes/RegisterPersonal.js";
 import registerVehicleRouter from "./routes/RegisterVehicle.js";
+import loginRouter from "./routes/login.js";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/orders", orderRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/drivers", registerPersonalRouter);
 app.use("/api/vehicles", registerVehicleRouter);
+app.use("/api/auth", loginRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
