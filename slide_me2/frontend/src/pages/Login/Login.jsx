@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // ใช้ useNavigate
-import { CSSTransition } from 'react-transition-group'; // นำเข้า CSSTransition
 import './Login.css';
 
 function Login() {
@@ -20,7 +19,7 @@ function Login() {
         // เริ่มอนิเมชั่น fade-out ก่อนเปลี่ยนหน้า
         document.querySelector('.Login-container').classList.add('fade-out');
         setTimeout(() => {
-            navigate('/register');
+            navigate('/register/customer'); // เปลี่ยนเส้นทางไปที่ RegisterCustomer
         }, 500); // ดีเลย์เพื่อให้อนิเมชั่นทำงาน
     };
 

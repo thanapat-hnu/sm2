@@ -1,66 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import './chat.css';
 
 const Chat = () => {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
-    const wsRef = useRef(null);
 
-    // เชื่อมต่อ WebSocket เมื่อ component mount
-    useEffect(() => {
-        try {
-            wsRef.current = new WebSocket('ws://26.151.30.37:8080');
-
-            wsRef.current.onopen = () => {
-                console.log('Connected to chat server');
-                // ส่งข้อมูลเริ่มต้นระบุว่าเป็น Customer
-                const connectionMessage = {
-                    type: 'connection',
-                    user: 'Customer'
-                };
-                wsRef.current.send(JSON.stringify(connectionMessage));
-            };
-
-            wsRef.current.onmessage = (event) => {
-                const receivedMessage = JSON.parse(event.data);
-                if (receivedMessage.type === 'chat') {
-                    setMessages(prev => [...prev, {
-                        sender: receivedMessage.user === 'Customer' ? 'You' : receivedMessage.user,
-                        text: receivedMessage.message,
-                        timestamp: receivedMessage.timestamp
-                    }]);
-                }
-            };
-
-            wsRef.current.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
-
-            wsRef.current.onclose = () => {
-                console.log('Disconnected from chat server');
-            };
-        } catch (error) {
-            console.error('Failed to create WebSocket connection:', error);
-        }
-
-        return () => {
-            if (wsRef.current) {
-                wsRef.current.close();
-            }
-        };
-    }, []);
-
-    // ส่งข้อความ
+    // ส่งข้อความ (local)
     const handleSendMessage = () => {
-        if (message.trim() && wsRef.current) {
+        if (message.trim()) {
             const messageData = {
-                type: 'chat',
-                user: 'Customer',
-                message: message.trim(),
+                sender: 'You',
+                text: message.trim(),
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
-
-            wsRef.current.send(JSON.stringify(messageData));
+            setMessages(prev => [...prev, messageData]);
             setMessage('');
         }
     };
@@ -77,7 +30,6 @@ const Chat = () => {
             <div className="chat-title">
                 <strong>Live Chat Support</strong>
             </div>
-
             <div className="chat-popup">
                 <div className="chat-popup-header">
                     <span className="chat-name">Customer Support</span>

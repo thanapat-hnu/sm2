@@ -10,11 +10,13 @@ import Profileedit from './pages/Profileedit/Profileedit';
 import Login from './pages/Login/Login';
 import Inputphone from './pages/Inputphone/Inputphone';
 import OTP from './pages/OTP/OTP';
-import Register from './pages/Register/Register';
+import RegisterCustomer from './pages/Register/RegisterCustomer';
+import RegisterDriverPersonal from './pages/Register/RegisterDriverPersonal';
+import RegisterDriverVehicle from './pages/Register/RegisterDriverVehicle';
 import Create from './pages/Create/Create';
 import List from './pages/list/list';
 import History from './pages/history/history';
-import Chat from './pages/chat/chat'; // แก้จาก Chat.jsx เป็น chat.jsx
+import Chat from './pages/chat/chat';
 import Payment from './Payment/Payment';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -36,11 +38,13 @@ function App() {
             <Route path="/profile" element={<Profileedit />} />
           </Route>
 
-          {/* auth routes */}
+          {/* auth & register routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/inputphone" element={<Inputphone />} />
           <Route path="/otp" element={<OTP />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register/customer" element={<RegisterCustomer />} />
+          <Route path="/register/driver/personal" element={<RegisterDriverPersonal />} />
+          <Route path="/register/driver/vehicle" element={<RegisterDriverVehicle />} />
           <Route path="/create" element={<Create />} />
           <Route path="/payment" element={<Payment />} />
 
