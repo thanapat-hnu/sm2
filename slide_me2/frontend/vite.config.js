@@ -1,7 +1,10 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  base: '/slide_me2/', // ต้องตรงกับ basename ใน BrowserRouter
   plugins: [react()],
-});
+  base: '/slide_me2/',  // คงค่านี้ไว้
+  server: {
+    port: 5173
+  }
+})

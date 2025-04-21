@@ -34,9 +34,17 @@ function Create() {
 
     const handleNext = async () => {
         try {
+            if (!phoneNumber) {
+                alert("ไม่พบข้อมูลเบอร์โทรศัพท์");
+                return;
+            }
+
             const response = await fetch('http://localhost:3000/api/update-profile', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify({
                     phone: phoneNumber,
                     email: formData.email,
@@ -45,13 +53,19 @@ function Create() {
                     gender: formData.gender,
                 }),
             });
-    
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const result = await response.json();
-            console.log(result);
-    
+            
             if (result.success) {
                 localStorage.setItem("phoneNumber", phoneNumber);
-                navigate('/home', { state: { phoneNumber } }); // ✅ ไปหน้า home หลังสร้างโปรไฟล์
+                setAnimateClass('Create-fadeOut');
+                setTimeout(() => {
+                    navigate('/home', { state: { phoneNumber } });
+                }, 500);
             } else {
                 alert("เกิดข้อผิดพลาด: " + result.message);
             }
@@ -60,6 +74,7 @@ function Create() {
             alert("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
         }
     };
+
     const handleBack = () => {
         setAnimateClass('Create-fadeOut');
         setTimeout(() => {

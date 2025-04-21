@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "phoneNumber": "1234567890",
+    "role": "customer",
+    "status": "active",
+    "registeredAt": "2025-04-21T08:35:37.139Z",
+    "createdAt": "2025-04-21T08:35:37.139Z",
+    "email": "QQQ@QQQ.QQQ",
+    "firstname": "WWW",
+    "lastname": "QQQ",
+    "gender": "หญิง",
+    "updatedAt": "2025-04-21T08:50:42.803Z"
+  },
+  {
+    "id": 2,
+    "phoneNumber": "0987654321",
+    "role": "driver",
+    "status": "active",
+    "registeredAt": "2025-04-21T09:32:58.037Z",
+    "createdAt": "2025-04-21T09:32:58.037Z"
+  }
+]

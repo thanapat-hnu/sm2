@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import './Finish.css';
-import Payment from '../../Payment/Payment';
 
 function Finish({
   showfinish,
+  setShowfinish,
+  selectedLocation,
+  destinationLocation,
   mapHeight,
   setMapHeight,
-  payment,
-  setPayment,
+  setPayment, // Keep this prop for compatibility
   name = 'ไม่ระบุชื่อบริการ',
   price = 0,
   carType,
@@ -30,7 +31,6 @@ function Finish({
 
   const handleButtonClick = () => {
     if (!statepm) {
-      setPayment(true);
       setStatePm(true);
     } else if (!stateTruck) {
       setStateTruck(true);
@@ -160,18 +160,6 @@ function Finish({
             ? 'เริ่มงาน'
             : 'ชำระเงิน'}
         </button>
-
-        {payment === true && (
-          <Payment
-            setPayment={setPayment}
-            carType={carType}
-            price={price}
-            name={name}
-            setPrice={setPrice}
-            mid={mid}
-            mid2={mid2}
-          />
-        )}
       </div>
     </div>
   );

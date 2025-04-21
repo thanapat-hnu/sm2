@@ -21,10 +21,65 @@ function RegisterDriverPersonal() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     e.preventDefault();
-    console.log("Driver Personal Data:", formData);
-    navigate("/register/driver/vehicle"); // เปลี่ยนเส้นทางไปหน้า vehicle
+
+    // ตรวจสอบข้อมูลที่จำเป็น
+    if (!formData.firstName || !formData.lastName || !formData.idCard || !formData.phone) {
+      alert('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน');
+      return;
+    }
+
+    try {
+      // Step 1: ลงทะเบียนข้อมูลส่วนตัว
+      const personalResponse = await fetch("http://localhost:3000/api/register/driver/personal", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!personalResponse.ok) {
+        throw new Error(`HTTP error! status: ${personalResponse.status}`);
+      }
+
+      const personalResult = await personalResponse.json();
+
+      if (personalResult.success) {
+        // Step 2: ลงทะเบียนเบอร์โทรและ role
+        const phoneResponse = await fetch("http://localhost:3000/api/insert-phone", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            phoneNumber: formData.phone,
+            role: 'driver'
+          }),
+        });
+
+        if (!phoneResponse.ok) {
+          throw new Error(`HTTP error! status: ${phoneResponse.status}`);
+        }
+
+        const phoneResult = await phoneResponse.json();
+        
+        if (phoneResult.success) {
+          // บันทึกข้อมูลใน localStorage
+          localStorage.setItem('driverData', JSON.stringify({
+            ...formData,
+            role: 'driver',
+            personalId: personalResult.data.id
+          }));
+          
+          navigate("/register/driver/vehicle");
+        }
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('เกิดข้อผิดพลาดในการลงทะเบียน');
+    }
   };
 
   return (

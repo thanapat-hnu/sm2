@@ -1,30 +1,74 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Vehicle.css"; // ใช้ Vehicle.css
+import "./Vehicle.css";
 
 function RegisterDriverVehicle() {
   const [formData, setFormData] = useState({
     vehicleType: "",
     licenseNumber: "",
     licenseExpiry: "",
-    licenseImage: null, // รูปใบขับขี่ (null)
+    licenseImage: null,
     carBrand: "",
     carPlate: "",
-    carImage: null, // รูปรถ (null)
-    carRegistrationImage: null, // รูปทะเบียนรถ (null)
+    carImage: null,
+    carRegistrationImage: null,
   });
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    console.log("Driver Vehicle Data:", formData);
-    navigate("/home"); // เปลี่ยนเส้นทางไปหน้า home หลังลงทะเบียนเสร็จ
+    
+    // ตรวจสอบข้อมูลที่จำเป็น
+    if (!formData.vehicleType || !formData.licenseNumber || !formData.carPlate) {
+      alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+      return;
+    }
+
+    try {
+      // ดึงข้อมูล driver จาก localStorage
+      const driverData = JSON.parse(localStorage.getItem('driverData'));
+      
+      if (!driverData || !driverData.personalId) {
+        throw new Error('ไม่พบข้อมูลคนขับ กรุณาลงทะเบียนข้อมูลส่วนตัวก่อน');
+      }
+
+      const response = await fetch('http://localhost:3000/api/register/driver/vehicle', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          driverPersonalId: driverData.personalId, // เชื่อมโยงกับข้อมูลส่วนตัว
+          submitDate: new Date().toISOString()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.success) {
+        alert('ลงทะเบียนสำเร็จ');
+        // อัพเดทข้อมูลใน localStorage
+        localStorage.setItem('vehicleData', JSON.stringify({
+          ...result.data,
+          driverPersonalId: driverData.personalId
+        }));
+        navigate("/driver/home"); // นำทางไปหน้า driver
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('เกิดข้อผิดพลาด: ' + error.message);
+    }
   };
 
   return (

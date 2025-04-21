@@ -6,6 +6,8 @@ import "./Profileedit.css";
 function Profileedit() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [profileImage, setProfileImage] = useState("./img/profile.png");
   const [formData, setFormData] = useState({
@@ -14,29 +16,29 @@ function Profileedit() {
     sex: "",
     email: "",
     number: "",
+    role: ""
   });
   const [isEditing, setIsEditing] = useState(false);
 
   const phoneNumber =
-    location.state?.phoneNumber || localStorage.getItem("phoneNumber"); // ✅ รับเบอร์จาก state หรือ localStorage
+    location.state?.phoneNumber || localStorage.getItem("phoneNumber");
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUserData = async () => {
       try {
-        let res = await axios.get(
+        setLoading(true);
+        const response = await fetch(
           `http://localhost:3000/api/get-user?phone=${phoneNumber}`
         );
 
-        if (!res.data.success) {
-          res = await axios.get(
-            `http://localhost:3000/api/get-user?phone=${phoneNumber}`
-          );
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
         }
 
-        if (res.data.success) {
-          const user = res.data.user;
+        const data = await response.json();
 
-          // แปลงค่าจาก "หญิง" เป็น "female" และ "ชาย" เป็น "male"
+        if (data.success && data.user) {
+          const user = data.user;
           const gender =
             user.gender === "หญิง"
               ? "female"
@@ -47,24 +49,32 @@ function Profileedit() {
           setFormData({
             name: user.firstname || "",
             lastname: user.lastname || "",
-            sex: gender, // กำหนดค่า gender ที่แปลงแล้ว
+            sex: gender,
             email: user.email || "",
-            number: user.phone || "",
+            number: user.phoneNumber || "",
+            role: user.role || "customer"
           });
 
           if (user.profileImage) {
             setProfileImage(user.profileImage);
           }
         } else {
-          alert("ไม่พบข้อมูลผู้ใช้");
+          setError("ไม่พบข้อมูลผู้ใช้");
         }
       } catch (err) {
         console.error("Error fetching user data:", err);
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        setError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (phoneNumber) fetchData(); // ✅ ดึงข้อมูลเมื่อได้เบอร์
+    if (phoneNumber) {
+      fetchUserData();
+    } else {
+      setError("ไม่พบเบอร์โทรศัพท์");
+      setLoading(false);
+    }
   }, [phoneNumber]);
 
   const handleImageChange = (event) => {
@@ -91,7 +101,7 @@ function Profileedit() {
       email: formData.email,
       firstname: formData.name,
       lastname: formData.lastname,
-      gender: translatedGender, // ✅ ส่งเป็น "ชาย"/"หญิง"
+      gender: translatedGender,
       phone: formData.number,
     };
 
@@ -135,7 +145,7 @@ function Profileedit() {
       if (res.data.success) {
         alert("ลบบัญชีเรียบร้อยแล้ว");
         localStorage.removeItem("phoneNumber");
-        navigate("/login"); // หรือ navigate("/login")
+        navigate("/login");
       } else {
         alert(res.data.message || "ไม่สามารถลบบัญชีได้");
       }
@@ -144,6 +154,14 @@ function Profileedit() {
       alert("เกิดข้อผิดพลาดขณะลบบัญชี");
     }
   };
+
+  if (loading) {
+    return <div className="loading">กำลังโหลดข้อมูล...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
 
   return (
     <div className="profileedit-container">
@@ -229,6 +247,10 @@ function Profileedit() {
           </select>
         </div>
 
+        <div className="profileedit-role">
+          สถานะ: {formData.role === "driver" ? "คนขับ" : "ผู้ใช้บริการ"}
+        </div>
+
         {isEditing && (
           <div className="form-summit">
             <button className="btn-summit" onClick={handleSave}>
@@ -242,7 +264,9 @@ function Profileedit() {
         </div>
 
         <div className="form-delete">
-          <button className="btn-delete" onClick={handleDelete}>ลบบัญชี</button>
+          <button className="btn-delete" onClick={handleDelete}>
+            ลบบัญชี
+          </button>
         </div>
       </div>
     </div>

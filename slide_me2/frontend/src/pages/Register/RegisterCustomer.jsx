@@ -29,24 +29,42 @@ function Register() {
     try {
       const response = await fetch("http://localhost:3000/api/insert-phone", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber: rawPhone }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ 
+          phoneNumber: rawPhone,
+          role: 'customer' // กำหนด role เป็น customer
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const result = await response.json();
+      
       if (result.success) {
-        // Server จัดการส่ง OTP ไปยังผู้ใช้แล้ว
+        localStorage.setItem('userPhone', rawPhone);
         setAnimateClass("Register-fadeOut");
         setTimeout(() => {
-          // ส่งเบอร์ไปด้วยเพื่อใช้ใน OTP
-          navigate("/otp", { state: { from: "/register", phoneNumber: rawPhone } });
+          navigate("/otp", { 
+            state: { 
+              from: "/register", 
+              phoneNumber: rawPhone 
+            } 
+          });
         }, 500);
       } else {
         setErrorMessage(result.message || "เกิดข้อผิดพลาด");
       }
     } catch (error) {
+      console.error("Registration error:", error);
       setErrorMessage("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
     }
   };
+
   const handleBack = () => {
     setAnimateClass("Register-fadeOut"); // เริ่มแอนิเมชันออก
     setTimeout(() => {

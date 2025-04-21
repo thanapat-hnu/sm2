@@ -21,34 +21,40 @@ function Inputphone() {
   };
 
   const handleNext = async () => {
-    const rawPhone = phoneNumber.replace(/\D/g, ""); // ลบ - ออก
+    const rawPhone = phoneNumber.replace(/\D/g, "");
     if (rawPhone.length !== 10) {
       setErrorMessage("กรุณากรอกหมายเลขโทรศัพท์ให้ครบ 10 หลัก");
       return;
     }
-  
+
     try {
-      // 🔍 ตรวจสอบว่าเบอร์มีในระบบ
       const res = await fetch("http://localhost:3000/api/check-phone", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phoneNumber: rawPhone }),
       });
-  
+
       const result = await res.json();
-  
-      if (!result.exists) {
-        setErrorMessage("ไม่พบเบอร์นี้ในระบบ กรุณาสมัครก่อน");
-        return;
+
+      if (result.success && result.exists) {
+        // เก็บข้อมูลใน localStorage
+        localStorage.setItem('userToken', result.token);
+        localStorage.setItem('userRole', result.role);
+        localStorage.setItem('phoneNumber', rawPhone);
+        
+        // redirect ไปหน้า OTP
+        setAnimateClass('Inputphone-fadeOut');
+        setTimeout(() => {
+          navigate('/otp', {
+            state: {
+              phoneNumber: rawPhone,
+              from: '/inputphone'
+            }
+          });
+        }, 500);
       }
-  
-      // ✅ ถ้ามี → ไปหน้า OTP พร้อมเบอร์
-      setAnimateClass("Inputphone-fadeOut");
-      setTimeout(() => {
-        navigate("/otp", { state: { from: "/inputphone", phoneNumber: rawPhone } });
-      }, 500);
     } catch (error) {
-      console.error("Error checking phone:", error);
+      console.error("Error:", error);
       setErrorMessage("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
     }
   };

@@ -4,8 +4,9 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon All-Route/chat.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon app.js",
+    "chat": "nodemon All-Route/chat.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -16,8 +17,7 @@
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "mysql": "^2.18.1",
-    "mysql2": "^3.14.0",
+    "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.9",
     "ws": "^8.x.x"
   }

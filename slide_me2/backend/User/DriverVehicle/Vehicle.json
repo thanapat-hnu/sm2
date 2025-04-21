@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "vehicleType": "Toyoyo",
+    "licenseNumber": "Driver",
+    "licenseExpiry": "2025-04-01",
+    "carBrand": "Toyoyo",
+    "carPlate": "123Toyoyo",
+    "registeredAt": "2025-04-21T09:33:10.105Z",
+    "createdAt": "2025-04-21T09:33:10.105Z",
+    "status": "pending"
+  }
+]

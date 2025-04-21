@@ -1,23 +1,37 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import phoneRoutes from './routes.js'; 
+import phoneRoutes from './All-Route/Route.js';
+import customerRoutes from './All-Route/Customer.js';
 import HomeRoutes from './Homeroutes.js';
 import bookingRoutes from './bookingRoutes.js';
 import locationRoutes from './locationRoutes.js';
 import mapRoutes from './mapRoutes.js';
+import driverRoutes from './All-Route/DriverRoute.js';
+import vehicleRoutes from './All-Route/VehicleRoute.js';
+
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
-app.use(cors());
-app.use(bodyParser.json());
+// Middleware setup - order matters!
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 
-// ✅ ใช้ router ที่รวม logic คุยกับ DB
+// Use only ONE body parser
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+
+// Routes
 app.use('/api', phoneRoutes);
+app.use('/api', customerRoutes);
 app.use('/api', HomeRoutes);
- app.use('/api', bookingRoutes);
- app.use('/api', locationRoutes);
- app.use('/api', mapRoutes);
+app.use('/api', bookingRoutes);
+app.use('/api', locationRoutes);
+app.use('/api', mapRoutes);
+app.use('/api', driverRoutes);
+app.use('/api', vehicleRoutes);
 
 // ✅ In-memory store สำหรับ OTP เท่านั้น
 const otps = {};
@@ -56,6 +70,16 @@ app.post('/api/verify-otp', (req, res) => {
   }
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ 
+    success: false, 
+    message: 'Something went wrong!',
+    error: err.message 
+  });
+});
+
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
