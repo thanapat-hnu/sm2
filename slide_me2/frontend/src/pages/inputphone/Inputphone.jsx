@@ -28,33 +28,36 @@ function Inputphone() {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/api/check-phone", {
+      const response = await fetch("http://localhost:3000/api/check-phone", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phoneNumber: rawPhone }),
       });
 
-      const result = await res.json();
+      const result = await response.json();
+      console.log('Login response:', result); // เพิ่ม debug log
 
       if (result.success && result.exists) {
         // เก็บข้อมูลใน localStorage
         localStorage.setItem('userToken', result.token);
         localStorage.setItem('userRole', result.role);
         localStorage.setItem('phoneNumber', rawPhone);
-        
-        // redirect ไปหน้า OTP
-        setAnimateClass('Inputphone-fadeOut');
+        localStorage.setItem('userData', JSON.stringify(result.userData));
+
+        setAnimateClass("Inputphone-fadeOut");
         setTimeout(() => {
-          navigate('/otp', {
-            state: {
+          navigate("/otp", { 
+            state: { 
               phoneNumber: rawPhone,
-              from: '/inputphone'
-            }
+              from: "/inputphone"
+            } 
           });
         }, 500);
+      } else {
+        setErrorMessage(result.message || "เบอร์โทรศัพท์นี้ไม่มีในระบบ");
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Login error:", error);
       setErrorMessage("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
     }
   };

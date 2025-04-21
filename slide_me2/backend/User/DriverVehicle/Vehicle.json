@@ -6,8 +6,9 @@
     "licenseExpiry": "2025-04-01",
     "carBrand": "Toyoyo",
     "carPlate": "123Toyoyo",
-    "registeredAt": "2025-04-21T09:33:10.105Z",
-    "createdAt": "2025-04-21T09:33:10.105Z",
-    "status": "pending"
+    "submitDate": "2025-04-21T11:32:00.801Z",
+    "registeredAt": "2025-04-21T11:32:00.824Z",
+    "status": "pending",
+    "createdAt": "2025-04-21T11:32:00.824Z"
   }
 ]

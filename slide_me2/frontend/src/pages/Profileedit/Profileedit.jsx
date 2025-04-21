@@ -11,71 +11,44 @@ function Profileedit() {
 
   const [profileImage, setProfileImage] = useState("./img/profile.png");
   const [formData, setFormData] = useState({
-    name: "",
-    lastname: "",
-    sex: "",
+    firstName: "",
+    lastName: "",
+    gender: "",
     email: "",
-    number: "",
-    role: ""
+    phoneNumber: "",
+    role: "",
+    status: "",
+    idCard: "",
+    birthDate: "",
+    address: ""
   });
   const [isEditing, setIsEditing] = useState(false);
 
-  const phoneNumber =
-    location.state?.phoneNumber || localStorage.getItem("phoneNumber");
-
   useEffect(() => {
-    const fetchUserData = async () => {
+    const loadUserData = () => {
       try {
-        setLoading(true);
-        const response = await fetch(
-          `http://localhost:3000/api/get-user?phone=${phoneNumber}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
+        const savedUserData = localStorage.getItem('userData');
+        if (!savedUserData) {
+          throw new Error('ไม่พบข้อมูลผู้ใช้');
         }
 
-        const data = await response.json();
-
-        if (data.success && data.user) {
-          const user = data.user;
-          const gender =
-            user.gender === "หญิง"
-              ? "female"
-              : user.gender === "ชาย"
-              ? "male"
-              : "";
-
-          setFormData({
-            name: user.firstname || "",
-            lastname: user.lastname || "",
-            sex: gender,
-            email: user.email || "",
-            number: user.phoneNumber || "",
-            role: user.role || "customer"
-          });
-
-          if (user.profileImage) {
-            setProfileImage(user.profileImage);
-          }
-        } else {
-          setError("ไม่พบข้อมูลผู้ใช้");
+        const userData = JSON.parse(savedUserData);
+        setFormData(userData);
+        if (userData.profileImage) {
+          setProfileImage(userData.profileImage);
         }
-      } catch (err) {
-        console.error("Error fetching user data:", err);
-        setError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
-      } finally {
         setLoading(false);
+
+      } catch (err) {
+        console.error("Error loading user data:", err);
+        setError(err.message);
+        localStorage.clear();
+        navigate('/login');
       }
     };
 
-    if (phoneNumber) {
-      fetchUserData();
-    } else {
-      setError("ไม่พบเบอร์โทรศัพท์");
-      setLoading(false);
-    }
-  }, [phoneNumber]);
+    loadUserData();
+  }, [navigate]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -93,31 +66,36 @@ function Profileedit() {
   };
 
   const handleSave = async () => {
-    setIsEditing(false);
-
-    const translatedGender = formData.sex === "male" ? "ชาย" : "หญิง";
-
-    const updatedProfileData = {
-      email: formData.email,
-      firstname: formData.name,
-      lastname: formData.lastname,
-      gender: translatedGender,
-      phone: formData.number,
-    };
-
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/update-profile",
-        updatedProfileData
-      );
-      if (res.data.success) {
-        alert("อัปเดตข้อมูลสำเร็จ");
+      const response = await fetch("http://localhost:3000/api/update-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          phoneNumber: formData.phoneNumber,
+          updatedAt: new Date().toISOString()
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setIsEditing(false);
+        // อัพเดท localStorage ด้วยข้อมูลใหม่
+        localStorage.setItem('userData', JSON.stringify({
+          ...result.user,
+          token: localStorage.getItem('userToken'),
+          role: formData.role
+        }));
+        alert("อัพเดทข้อมูลสำเร็จ");
       } else {
-        alert("ไม่สามารถอัปเดตข้อมูลได้");
+        alert(result.message || "ไม่สามารถอัพเดทข้อมูลได้");
       }
-    } catch (err) {
-      console.error("Error updating profile:", err);
-      alert("เกิดข้อผิดพลาด");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("เกิดข้อผิดพลาดในการอัพเดทข้อมูล");
     }
   };
 
@@ -130,6 +108,7 @@ function Profileedit() {
   };
 
   const handleLogout = () => {
+    localStorage.clear();
     navigate("/login");
   };
 
@@ -139,12 +118,12 @@ function Profileedit() {
 
     try {
       const res = await axios.post("http://localhost:3000/api/delete-user", {
-        phone: formData.number,
+        phone: formData.phoneNumber,
       });
 
       if (res.data.success) {
         alert("ลบบัญชีเรียบร้อยแล้ว");
-        localStorage.removeItem("phoneNumber");
+        localStorage.clear();
         navigate("/login");
       } else {
         alert(res.data.message || "ไม่สามารถลบบัญชีได้");
@@ -166,7 +145,7 @@ function Profileedit() {
   return (
     <div className="profileedit-container">
       <div className="profileedit-banner">
-        <div className="profileedit-welcome">สวัสดี คุณ {formData.name}</div>
+        <div className="profileedit-welcome">สวัสดี คุณ {formData.firstName}</div>
 
         <div className="profile-containers">
           <label htmlFor="uploadImage">
@@ -193,20 +172,22 @@ function Profileedit() {
         <div className="form-name">
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="firstName"
+            value={formData.firstName}
             onChange={handleInputChange}
             readOnly={!isEditing}
+            placeholder="ชื่อ"
           />
         </div>
 
         <div className="form-lastname">
           <input
             type="text"
-            name="lastname"
-            value={formData.lastname}
+            name="lastName"
+            value={formData.lastName}
             onChange={handleInputChange}
             readOnly={!isEditing}
+            placeholder="นามสกุล"
           />
         </div>
 
@@ -214,8 +195,8 @@ function Profileedit() {
           <input type="text" id="country" value="+66" readOnly />
           <input
             type="text"
-            name="number"
-            value={formData.number}
+            name="phoneNumber"
+            value={formData.phoneNumber}
             onChange={handleInputChange}
             readOnly
           />
@@ -228,14 +209,15 @@ function Profileedit() {
             value={formData.email}
             onChange={handleInputChange}
             readOnly={!isEditing}
+            placeholder="อีเมล"
           />
         </div>
 
         <div className="form-sex">
           <select
             className="form-selects"
-            name="sex"
-            value={formData.sex}
+            name="gender"
+            value={formData.gender}
             onChange={handleInputChange}
             disabled={!isEditing}
           >
@@ -247,8 +229,43 @@ function Profileedit() {
           </select>
         </div>
 
+        {formData.role === "driver" && (
+          <>
+            <div className="form-idcard">
+              <input
+                type="text"
+                name="idCard"
+                value={formData.idCard}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
+                placeholder="เลขบัตรประชาชน"
+              />
+            </div>
+
+            <div className="form-birthdate">
+              <input
+                type="date"
+                name="birthDate"
+                value={formData.birthDate}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
+              />
+            </div>
+
+            <div className="form-address">
+              <textarea
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
+                placeholder="ที่อยู่"
+              />
+            </div>
+          </>
+        )}
+
         <div className="profileedit-role">
-          สถานะ: {formData.role === "driver" ? "คนขับ" : "ผู้ใช้บริการ"}
+          สถานะ: {formData.role === "driver" ? "ผู้ให้บริการ" : "ผู้ใช้บริการ"}
         </div>
 
         {isEditing && (

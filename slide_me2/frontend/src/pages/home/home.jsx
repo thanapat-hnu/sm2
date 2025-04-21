@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import LongdoMap from '../map/LongdoMap';
 import Locat from '../local/local';
@@ -11,7 +12,7 @@ import './home.css';
 
 function Home() {
   const [button, setButton] = useState('');
-  const [local, setLocal] = useState({  });
+  const [local, setLocal] = useState({});
   const [readLocal, setReadLocal] = useState({ lat: 0, lng: 0 });
   const [readLocalB, setReadLocalB] = useState({ lat: 0, lng: 0 });
   const [options, setOptions] = useState('');
@@ -33,6 +34,38 @@ function Home() {
   const [price, setPrice] = useState(1500);
   const [mid, setMid] = useState('');
   const [mid2, setMid2] = useState('');
+  const [userData, setUserData] = useState(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkUserData = async () => {
+      try {
+        const role = localStorage.getItem('userRole');
+        const storedUserData = JSON.parse(localStorage.getItem('userData'));
+        const token = localStorage.getItem('userToken');
+
+        if (!role || !storedUserData || !token) {
+          navigate('/login');
+          return;
+        }
+
+        // ถ้าเป็น driver ให้ redirect ไปหน้า driver
+        if (role === 'driver') {
+          navigate('/driver/home');
+          return;
+        }
+
+        setUserData(storedUserData);
+
+      } catch (error) {
+        console.error('Error checking user data:', error);
+        navigate('/login');
+      }
+    };
+
+    checkUserData();
+  }, [navigate]);
 
   const formatDate = (date) =>
     date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' });
@@ -44,7 +77,7 @@ function Home() {
         readLocalB={readLocalB}
         showMarker={showMarker}
         setLocal={setLocal}
-        local={local}
+        local={local || {}}
         mapHeight={mapHeight}
         towTruckData={towTruckData}
         name={name}

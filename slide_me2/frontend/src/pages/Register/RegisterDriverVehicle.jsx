@@ -1,43 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRegister } from "../../Context/Context";
 import "./Vehicle.css";
 
 function RegisterDriverVehicle() {
-  const [formData, setFormData] = useState({
-    vehicleType: "",
-    licenseNumber: "",
-    licenseExpiry: "",
-    licenseImage: null,
-    carBrand: "",
-    carPlate: "",
-    carImage: null,
-    carRegistrationImage: null,
-  });
-
+  const { vehicleData, updateVehicleData } = useRegister();
+  const [formData, setFormData] = useState(vehicleData);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // โหลดข้อมูลจาก localStorage
+    const savedVehicleData = localStorage.getItem('driverVehicleData');
+    const driverData = localStorage.getItem('driverData');
+
+    if (!driverData) {
+      alert('กรุณาลงทะเบียนข้อมูลส่วนตัวก่อน');
+      navigate('/register/driver/personal');
+      return;
+    }
+
+    if (savedVehicleData) {
+      setFormData(JSON.parse(savedVehicleData));
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const newData = { ...formData, [name]: value };
+    setFormData(newData);
+    updateVehicleData(newData);
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     
-    // ตรวจสอบข้อมูลที่จำเป็น
     if (!formData.vehicleType || !formData.licenseNumber || !formData.carPlate) {
       alert('กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
 
     try {
-      // ดึงข้อมูล driver จาก localStorage
       const driverData = JSON.parse(localStorage.getItem('driverData'));
       
-      if (!driverData || !driverData.personalId) {
-        throw new Error('ไม่พบข้อมูลคนขับ กรุณาลงทะเบียนข้อมูลส่วนตัวก่อน');
-      }
-
       const response = await fetch('http://localhost:3000/api/register/driver/vehicle', {
         method: 'POST',
         headers: {
@@ -45,7 +49,7 @@ function RegisterDriverVehicle() {
         },
         body: JSON.stringify({
           ...formData,
-          driverPersonalId: driverData.personalId, // เชื่อมโยงกับข้อมูลส่วนตัว
+          driverPersonalId: driverData.id,
           submitDate: new Date().toISOString()
         })
       });
@@ -57,13 +61,8 @@ function RegisterDriverVehicle() {
       const result = await response.json();
       
       if (result.success) {
-        alert('ลงทะเบียนสำเร็จ');
-        // อัพเดทข้อมูลใน localStorage
-        localStorage.setItem('vehicleData', JSON.stringify({
-          ...result.data,
-          driverPersonalId: driverData.personalId
-        }));
-        navigate("/driver/home"); // นำทางไปหน้า driver
+        localStorage.setItem('vehicleData', JSON.stringify(result.data));
+        navigate("/driver/home");
       }
     } catch (error) {
       console.error('Registration error:', error);

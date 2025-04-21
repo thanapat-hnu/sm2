@@ -1,0 +1,31 @@
+[
+  {
+    "id": 1,
+    "phoneNumber": "0987654321",
+    "role": "driver",
+    "registeredAt": "2025-04-21T11:31:53.004Z",
+    "updatedAt": "2025-04-21T11:31:53.015Z",
+    "firstName": "Driver",
+    "lastName": "Driver",
+    "idCard": "Driver",
+    "birthDate": "2025-04-01",
+    "phone": "0987654321",
+    "email": "Driver@Driver.com",
+    "address": "Driver",
+    "idCardImage": null
+  },
+  {
+    "id": 2,
+    "phoneNumber": "1234567890",
+    "role": "customer",
+    "registeredAt": "2025-04-21T11:32:29.397Z",
+    "updatedAt": "2025-04-21T11:32:29.397Z"
+  },
+  {
+    "id": 3,
+    "phoneNumber": "1234567891",
+    "role": "customer",
+    "registeredAt": "2025-04-21T11:37:46.642Z",
+    "updatedAt": "2025-04-21T11:37:46.642Z"
+  }
+]

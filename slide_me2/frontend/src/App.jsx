@@ -19,18 +19,25 @@ import History from './pages/history/history';
 import ChatList from './pages/chat/chatlist';
 import ChatRoom from './pages/chat/chatroom';
 
+import { RegisterProvider } from './Context/Context';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem('userToken');
   const role = localStorage.getItem('userRole');
+  const isVerified = localStorage.getItem('isVerified');
 
-  if (!token) {
-    return <Navigate to="/login" />;
+  console.log('ProtectedRoute check:', { token, role, isVerified });
+
+  // แก้ไขเงื่อนไขการตรวจสอบ role
+  if (role === 'driver' && !allowedRoles?.includes('driver')) {
+    console.log('Driver attempting to access unauthorized route');
+    return <Navigate to="/driver/home" />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(role)) {
-    return <Navigate to="/unauthorized" />;
+  // คงเงื่อนไขการตรวจสอบ token และ verification ไว้
+  if (!token || !isVerified) {
+    return <Navigate to="/login" />;
   }
 
   return children;
@@ -38,11 +45,9 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
 function App() {
   return (
-    <div className='container-app'>
-      <BrowserRouter basename="/slide_me2"> {/* เพิ่ม basename ให้ตรงกับ base ใน vite config */}
+    <RegisterProvider>
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
-          
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/inputphone" element={<Inputphone />} />
@@ -51,12 +56,8 @@ function App() {
           <Route path="/register/driver/personal" element={<RegisterDriverPersonal />} />
           <Route path="/register/driver/vehicle" element={<RegisterDriverVehicle />} />
 
-          {/* Protected customer routes */}
-          <Route element={
-            <ProtectedRoute allowedRoles={['customer']}>
-              <Layout />
-            </ProtectedRoute>
-          }>
+          {/* Customer routes */}
+          <Route element={<ProtectedRoute allowedRoles={['customer']}><Layout /></ProtectedRoute>}>
             <Route path="/home" element={<Home />} />
             <Route path="/list" element={<List />} />
             <Route path="/history" element={<History />} />
@@ -65,11 +66,17 @@ function App() {
             <Route path="/chatroom" element={<ChatRoom />} />
           </Route>
 
+          {/* Driver routes */}
+          <Route element={<ProtectedRoute allowedRoles={['driver']}><Layout /></ProtectedRoute>}>
+            <Route path="/driver/home" element={<Home />} />
+            <Route path="/driver/create" element={<Create />} />
+          </Route>
+
           {/* Catch all route */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>
-    </div>
+    </RegisterProvider>
   );
 }
 

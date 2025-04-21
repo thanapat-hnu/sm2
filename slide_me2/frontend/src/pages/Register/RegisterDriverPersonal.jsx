@@ -1,83 +1,74 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Personal.css"; // ใช้ Personal.css
+import { useRegister } from "../../Context/Context";
+import "./Personal.css";
 
 function RegisterDriverPersonal() {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    idCard: "",
-    birthDate: "",
-    phone: "",
-    email: "",
-    address: "",
-    idCardImage: null, // รูปบัตรประชาชน (null)
-  });
-
+  const { personalData, updatePersonalData } = useRegister();
+  const [formData, setFormData] = useState(personalData);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // โหลดข้อมูลจาก localStorage ถ้ามี
+    const savedData = localStorage.getItem('driverPersonalData');
+    if (savedData) {
+      setFormData(JSON.parse(savedData));
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const newData = { ...formData, [name]: value };
+    setFormData(newData);
+    updatePersonalData(newData); // อัพเดท context ทันที
   };
 
   const handleNext = async (e) => {
     e.preventDefault();
-
-    // ตรวจสอบข้อมูลที่จำเป็น
-    if (!formData.firstName || !formData.lastName || !formData.idCard || !formData.phone) {
-      alert('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน');
-      return;
-    }
-
+    
     try {
-      // Step 1: ลงทะเบียนข้อมูลส่วนตัว
-      const personalResponse = await fetch("http://localhost:3000/api/register/driver/personal", {
+      const phoneResponse = await fetch("http://localhost:3000/api/insert-phone", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          phoneNumber: formData.phone,
+          role: 'driver'
+        }),
       });
 
-      if (!personalResponse.ok) {
-        throw new Error(`HTTP error! status: ${personalResponse.status}`);
+      if (!phoneResponse.ok) {
+        throw new Error(`HTTP error! status: ${phoneResponse.status}`);
       }
 
-      const personalResult = await personalResponse.json();
+      const phoneResult = await phoneResponse.json();
 
-      if (personalResult.success) {
-        // Step 2: ลงทะเบียนเบอร์โทรและ role
-        const phoneResponse = await fetch("http://localhost:3000/api/insert-phone", {
+      if (phoneResult.success) {
+        const driverResponse = await fetch("http://localhost:3000/api/register/driver/personal", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            phoneNumber: formData.phone,
-            role: 'driver'
-          }),
+          body: JSON.stringify(formData),
         });
 
-        if (!phoneResponse.ok) {
-          throw new Error(`HTTP error! status: ${phoneResponse.status}`);
+        if (!driverResponse.ok) {
+          throw new Error(`HTTP error! status: ${driverResponse.status}`);
         }
 
-        const phoneResult = await phoneResponse.json();
-        
-        if (phoneResult.success) {
-          // บันทึกข้อมูลใน localStorage
-          localStorage.setItem('driverData', JSON.stringify({
-            ...formData,
-            role: 'driver',
-            personalId: personalResult.data.id
-          }));
+        const driverResult = await driverResponse.json();
+
+        if (driverResult.success) {
+          localStorage.setItem('driverData', JSON.stringify(driverResult.data));
+          localStorage.setItem('userToken', phoneResult.token);
+          localStorage.setItem('userRole', 'driver');
           
           navigate("/register/driver/vehicle");
         }
       }
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
       alert('เกิดข้อผิดพลาดในการลงทะเบียน');
     }
   };
